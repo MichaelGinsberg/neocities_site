@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Head shadow -->
+  <circle cx="16" cy="12" r="7.5" fill="#2870b0" opacity="0.3"/>
+  <!-- Head -->
+  <circle cx="16" cy="11" r="7" fill="#4a90d8"/>
+  <!-- Head highlight -->
+  <ellipse cx="14" cy="8.5" rx="4" ry="2.5" fill="#80bff0" opacity="0.4"/>
+  <!-- Face features (subtle) -->
+  <circle cx="13.5" cy="11" r="1" fill="#2060a8" opacity="0.5"/>
+  <circle cx="18.5" cy="11" r="1" fill="#2060a8" opacity="0.5"/>
+  <path d="M13 14 Q16 16 19 14" stroke="#2060a8" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <!-- Body / shoulders -->
+  <path d="M2,32 Q2,21 16,21 Q30,21 30,32 Z" fill="#4a90d8"/>
+  <!-- Body highlight -->
+  <path d="M6,32 Q6,24 16,24 Q26,24 26,32 Z" fill="#70aae8" opacity="0.5"/>
+  <!-- Shirt collar hint -->
+  <path d="M12,22 Q16,25 20,22" stroke="#80bff0" stroke-width="1" fill="none" opacity="0.5"/>
+</svg>

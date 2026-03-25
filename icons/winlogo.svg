@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="22" height="22">
+  <!-- Red (top-left) -->
+  <path d="M1,5 L10,3.5 L10,11 L1,11 Z" fill="#e8221a"/>
+  <path d="M1,5 L10,3.5 L10,6 L1,7.5 Z" fill="#ff5a50" opacity="0.5"/>
+  <!-- Green (top-right) -->
+  <path d="M11,3.2 L21,1.5 L21,11 L11,11 Z" fill="#3ab120"/>
+  <path d="M11,3.2 L21,1.5 L21,5 L11,5.5 Z" fill="#7dd860" opacity="0.5"/>
+  <!-- Blue (bottom-left) -->
+  <path d="M1,12 L10,12 L10,19.5 L1,17.5 Z" fill="#0060d0"/>
+  <path d="M1,12 L10,12 L10,13.5 L1,13 Z" fill="#60a8ff" opacity="0.4"/>
+  <!-- Yellow (bottom-right) -->
+  <path d="M11,12 L21,12 L21,21 L11,19.5 Z" fill="#f8c000"/>
+  <path d="M11,12 L21,12 L21,13.5 L11,13 Z" fill="#ffe060" opacity="0.4"/>
+</svg>

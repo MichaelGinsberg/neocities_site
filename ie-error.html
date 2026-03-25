@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>The page cannot be displayed</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Tahoma, Geneva, sans-serif;
+      font-size: 11px;
+      background: #fff;
+      color: #000;
+    }
+
+    /* ── IE6 chrome ── */
+    .ie-chrome {
+      background: #ece9d8;
+      border-bottom: 1px solid #aca899;
+    }
+    .ie-titlebar {
+      background: linear-gradient(to bottom, #0058e6 0%, #3a6fe8 4%, #0058e6 6%, #2162e8 45%, #0554e6 46%, #1b63f5 100%);
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 6px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 11px;
+      user-select: none;
+    }
+    .ie-titlebar img { width: 16px; height: 16px; }
+    .ie-title-text { flex: 1; }
+    .ie-win-btns { display: flex; gap: 2px; }
+    .ie-win-btn {
+      width: 21px; height: 19px;
+      background: linear-gradient(to bottom, #e0e4f0 0%, #c0c8e0 100%);
+      border: 1px solid; border-color: #fff #6070a0 #6070a0 #fff;
+      font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .ie-win-btn.close { background: linear-gradient(to bottom, #d84040 0%, #a82020 100%); color: #fff; }
+
+    .ie-menubar {
+      background: #ece9d8;
+      display: flex; gap: 0;
+      border-bottom: 1px solid #aca899;
+      padding: 0 4px;
+    }
+    .ie-menu-item {
+      padding: 3px 8px; font-size: 11px; cursor: pointer;
+    }
+    .ie-menu-item:hover { background: rgba(0,0,80,0.08); }
+
+    .ie-toolbar {
+      background: #ece9d8;
+      display: flex; align-items: center; gap: 2px;
+      padding: 3px 6px;
+      border-bottom: 2px solid #aca899;
+    }
+    .ie-toolbar-btn {
+      height: 26px; padding: 0 8px;
+      background: linear-gradient(to bottom, #f0efe8 0%, #dddbd0 100%);
+      border: 1px solid; border-color: #fff #848484 #848484 #fff;
+      font-size: 11px; font-family: Tahoma, sans-serif;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
+    .ie-toolbar-btn:hover { background: linear-gradient(to bottom, #fff 0%, #e8e6de 100%); }
+    .ie-toolbar-sep { width: 1px; height: 22px; background: #aca899; margin: 0 3px; }
+
+    .ie-address {
+      display: flex; align-items: center; gap: 4px;
+      padding: 3px 6px 4px;
+      border-bottom: 1px solid #aca899;
+      background: #ece9d8;
+    }
+    .ie-addr-label { font-size: 11px; font-weight: bold; }
+    .ie-addr-bar {
+      flex: 1; height: 22px;
+      border: 2px inset #848484;
+      padding: 0 4px; font-size: 11px; font-family: Tahoma, sans-serif;
+      background: #fff;
+    }
+    .ie-addr-go {
+      height: 22px; padding: 0 10px;
+      background: linear-gradient(to bottom, #f0efe8 0%, #dddbd0 100%);
+      border: 1px solid; border-color: #fff #848484 #848484 #fff;
+      font-size: 11px; cursor: pointer;
+    }
+
+    /* ── Error page content ── */
+    .error-page {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 120px);
+      background: #fff;
+    }
+
+    .error-header {
+      background: #4070c0;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .error-header img { width: 32px; height: 32px; }
+    .error-header-text h1 { font-size: 16px; font-weight: bold; }
+    .error-header-text p  { font-size: 11px; margin-top: 2px; opacity: 0.9; }
+
+    .error-body {
+      display: flex;
+      gap: 0;
+      flex: 1;
+      padding: 16px 20px;
+    }
+
+    .error-left {
+      flex: 1;
+      padding-right: 20px;
+      border-right: 1px solid #ccc;
+    }
+
+    .error-right {
+      width: 220px;
+      padding-left: 20px;
+    }
+
+    .error-section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #003399;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #003399;
+      padding-bottom: 2px;
+    }
+
+    .error-body p, .error-body li { font-size: 11px; line-height: 1.7; color: #333; }
+    .error-body ul { padding-left: 18px; margin: 6px 0; }
+    .error-body li { margin-bottom: 2px; }
+
+    .error-diagnose-btn {
+      margin-top: 10px;
+      padding: 4px 14px;
+      background: linear-gradient(to bottom, #f0efe8 0%, #dddbd0 100%);
+      border: 1px solid; border-color: #fff #848484 #848484 #fff;
+      font-size: 11px; font-family: Tahoma, sans-serif;
+      cursor: pointer;
+    }
+
+    /* ── DINO GAME ── */
+    #dino-section {
+      background: #f8f8f8;
+      border: 2px inset #aca899;
+      padding: 10px;
+      margin-top: 12px;
+      text-align: center;
+    }
+    #dino-hint {
+      font-size: 11px; color: #555; margin-bottom: 6px;
+    }
+    #dino-canvas {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    /* ── IE statusbar ── */
+    .ie-statusbar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #ece9d8;
+      border-top: 1px solid #aca899;
+      height: 22px;
+      display: flex; align-items: center;
+      padding: 0 6px;
+      font-size: 11px;
+      gap: 8px;
+    }
+    .ie-status-panel {
+      border: 1px inset #aca899;
+      padding: 0 6px; height: 18px;
+      display: flex; align-items: center;
+    }
+    .ie-status-panel.main { flex: 1; }
+  </style>
+</head>
+<body>
+
+<!-- IE6 Chrome -->
+<div class="ie-chrome">
+  <div class="ie-titlebar">
+    <img src="icons/ie.svg" alt=""/>
+    <span class="ie-title-text">The page cannot be displayed — Microsoft Internet Explorer</span>
+    <div class="ie-win-btns">
+      <div class="ie-win-btn">─</div>
+      <div class="ie-win-btn">□</div>
+      <div class="ie-win-btn close" onclick="window.location='index.html'">✕</div>
+    </div>
+  </div>
+
+  <div class="ie-menubar">
+    <span class="ie-menu-item">File</span>
+    <span class="ie-menu-item">Edit</span>
+    <span class="ie-menu-item">View</span>
+    <span class="ie-menu-item">Favorites</span>
+    <span class="ie-menu-item">Tools</span>
+    <span class="ie-menu-item">Help</span>
+  </div>
+
+  <div class="ie-toolbar">
+    <button class="ie-toolbar-btn" onclick="window.location='index.html'">⬅ Back</button>
+    <button class="ie-toolbar-btn" disabled style="opacity:0.5;">➡ Forward</button>
+    <div class="ie-toolbar-sep"></div>
+    <button class="ie-toolbar-btn" onclick="window.location.reload()">🔄 Refresh</button>
+    <button class="ie-toolbar-btn" onclick="window.location='index.html'">🏠 Home</button>
+    <div class="ie-toolbar-sep"></div>
+    <button class="ie-toolbar-btn">🔍 Search</button>
+    <button class="ie-toolbar-btn">⭐ Favorites</button>
+    <button class="ie-toolbar-btn">📰 History</button>
+    <div class="ie-toolbar-sep"></div>
+    <button class="ie-toolbar-btn">✉️ Mail</button>
+  </div>
+
+  <div class="ie-address">
+    <span class="ie-addr-label">Address</span>
+    <input class="ie-addr-bar" type="text" value="http://www.google.com/" readonly/>
+    <button class="ie-addr-go">Go</button>
+  </div>
+</div>
+
+<!-- Error page body -->
+<div class="error-page">
+
+  <div class="error-header">
+    <img src="icons/ie.svg" alt=""/>
+    <div class="error-header-text">
+      <h1>The page cannot be displayed</h1>
+      <p>The page you are looking for is currently unavailable. The Web site might be experiencing technical difficulties, or you may need to adjust your browser settings.</p>
+    </div>
+  </div>
+
+  <div class="error-body">
+    <div class="error-left">
+      <p style="margin-bottom:10px;">Please try the following:</p>
+
+      <div class="error-section-title">Cannot Find Server or DNS Error</div>
+      <ul>
+        <li>Click the <strong>Refresh</strong> button, or try again later.</li>
+        <li>If you typed the page address in the Address bar, make sure that it is spelled correctly.</li>
+        <li>To check your connection settings, click the <strong>Tools</strong> menu, and then click <strong>Internet Options</strong>. On the <strong>Connections</strong> tab, click <strong>Settings</strong>. The settings should match those provided by your local area network (LAN) administrator or Internet service provider (ISP).</li>
+        <li>See if your <strong>Internet connection</strong> settings are being detected. You can set Microsoft Windows to examine your network and automatically discover network connection settings (if your network administrator has enabled this setting).</li>
+        <li>If your computer or network is protected by a firewall or proxy, make sure that Internet Explorer is permitted to access the World Wide Web.</li>
+        <li>Some sites require 128-bit connection security. Click the <strong>Help</strong> menu and then click <strong>About Internet Explorer</strong> to determine what strength security you have installed.</li>
+        <li>If you are trying to reach a secure site, make sure your <strong>Security settings</strong> can support it. Click the <strong>Tools</strong> menu, and then click <strong>Internet Options</strong>. On the Advanced tab, scroll to the Security section and check settings for SSL 2.0, SSL 3.0, TLS 1.0, PCT 1.0.</li>
+        <li>Click the <strong>Back</strong> button to try another link.</li>
+      </ul>
+
+      <button class="ie-diagnose-btn">🔧 Detect Network Settings</button>
+
+      <!-- DINO GAME -->
+      <div id="dino-section">
+        <div id="dino-hint">🦕 No internet? Press <strong>Space</strong> or <strong>↑</strong> to play!</div>
+        <canvas id="dino-canvas" width="600" height="150"></canvas>
+      </div>
+    </div>
+
+    <div class="error-right">
+      <div class="error-section-title" style="margin-bottom:8px;">More Information</div>
+      <p>This problem can be caused by a variety of issues, including:</p>
+      <ul style="margin-top:6px;">
+        <li>Internet connectivity has been lost.</li>
+        <li>The website is temporarily unavailable.</li>
+        <li>The Domain Name Server (DNS) is not reachable.</li>
+        <li>The Domain Name Server (DNS) does not have a listing for the website's domain.</li>
+      </ul>
+
+      <div style="margin-top:14px;">
+        <div class="error-section-title">Links</div>
+        <ul>
+          <li><a href="index.html" style="color:#003399;">🏠 My Homepage</a></li>
+          <li><a href="about.html" style="color:#003399;">👤 About Me</a></li>
+          <li><a href="gallery.html" style="color:#003399;">📸 Photo Gallery</a></li>
+          <li><a href="music.html" style="color:#003399;">🎵 My Music</a></li>
+          <li><a href="guestbook.html" style="color:#003399;">📖 Guestbook</a></li>
+        </ul>
+      </div>
+
+      <div style="margin-top:14px; padding:8px; background:#fffbe0; border:1px solid #d0b000; font-size:10px; color:#555;">
+        <strong>⚠️ HTTP 404 / DNS_PROBE_FINISHED</strong><br/>
+        Cannot connect to server.<br/>
+        Error Code: 0x80070003
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IE statusbar -->
+<div class="ie-statusbar">
+  <div class="ie-status-panel main">⚠️ Cannot find server</div>
+  <div class="ie-status-panel">🌐 Internet</div>
+</div>
+
+<script>
+// ─── DINO GAME ────────────────────────────────────────────────────────────────
+(function () {
+  var canvas = document.getElementById('dino-canvas');
+  var ctx    = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var GROUND = H - 24;
+
+  // Game state
+  var state      = 'idle'; // idle | running | dead
+  var score      = 0;
+  var hiScore    = parseInt(localStorage.getItem('dino_hi') || '0', 10);
+  var speed      = 5;
+  var frameCount = 0;
+  var scrollX    = 0; // total scroll distance for ground texture
+
+  // Dino — hitbox is the torso core
+  var dino = {
+    x: 60, y: GROUND, w: 28, h: 46,
+    vy: 0, jumping: false, leg: 0
+  };
+
+  // Obstacles
+  var obstacles    = [];
+  var nextObstacle = 80;
+
+  // Clouds
+  var clouds = [{x: 200, y: 28}, {x: 420, y: 18}, {x: 560, y: 40}];
+
+  // ── Speed formula: smooth ramp, caps at 20 ──────────────────────────────────
+  function calcSpeed() {
+    return Math.min(5 + score * 0.007, 20);
+  }
+
+  // ── Next obstacle gap (shorter as game gets faster) ─────────────────────────
+  function obstacleGap() {
+    var base = Math.max(36, 85 - speed * 3);
+    return Math.floor(base + Math.random() * base * 0.9);
+  }
+
+  function jump() {
+    if (state === 'idle') { state = 'running'; return; }
+    if (state === 'dead') { reset(); return; }
+    if (!dino.jumping) { dino.vy = -12; dino.jumping = true; }
+  }
+
+  function reset() {
+    state = 'running';
+    score = 0; speed = 5; frameCount = 0; scrollX = 0;
+    dino.y = GROUND; dino.vy = 0; dino.jumping = false; dino.leg = 0;
+    obstacles = []; nextObstacle = 80;
+  }
+
+  // Input
+  document.addEventListener('keydown', function (e) {
+    if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); }
+  });
+  canvas.addEventListener('click', jump);
+  canvas.addEventListener('touchstart', function(e){ e.preventDefault(); jump(); });
+
+  // ── Draw T-Rex ───────────────────────────────────────────────────────────────
+  // x,y = bottom-left of hitbox (foot level = ground)
+  function drawDino(x, y, leg) {
+    var c = '#535353';
+    ctx.fillStyle = c;
+
+    // Tail (sweeps back and slightly up)
+    ctx.fillRect(x,      y - 18, 11, 7);
+    ctx.fillRect(x - 5,  y - 14, 8,  5);
+    ctx.fillRect(x - 9,  y - 11, 6,  4);
+
+    // Body (main torso)
+    ctx.fillRect(x + 8,  y - 32, 22, 22);
+
+    // Neck
+    ctx.fillRect(x + 18, y - 46, 12, 18);
+
+    // Skull
+    ctx.fillRect(x + 14, y - 52, 26, 14);
+
+    // Upper snout / jaw
+    ctx.fillRect(x + 30, y - 48, 12, 7);
+
+    // Lower jaw (slightly open, little darker)
+    ctx.fillStyle = '#474747';
+    ctx.fillRect(x + 28, y - 42, 14, 5);
+    ctx.fillStyle = c;
+
+    // Teeth hint (tiny white strip between jaws)
+    ctx.fillStyle = '#d0d0d0';
+    ctx.fillRect(x + 30, y - 43, 10, 2);
+    ctx.fillStyle = c;
+
+    // Eye — white sclera
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x + 30, y - 51, 6, 6);
+    // Pupil
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x + 32, y - 50, 3, 3);
+    ctx.fillStyle = c;
+
+    // Nostril
+    ctx.fillStyle = '#3e3e3e';
+    ctx.fillRect(x + 39, y - 44, 2, 2);
+    ctx.fillStyle = c;
+
+    // Tiny T-Rex arms
+    ctx.fillRect(x + 22, y - 22, 9,  5);
+    ctx.fillRect(x + 28, y - 19, 6,  4);
+    ctx.fillRect(x + 31, y - 17, 3,  3); // claw
+
+    // Legs (animated stride)
+    if (leg === 0) {
+      // Front leg: down; back leg: raised
+      ctx.fillRect(x + 19, y - 12, 9, 12); // front thigh+shin
+      ctx.fillRect(x + 17, y,      13, 4); // front foot
+      ctx.fillRect(x + 10, y - 10, 8,  6); // back thigh (raised)
+      ctx.fillRect(x + 12, y - 5,  6,  4); // back shin stub
+    } else {
+      // Front leg: raised; back leg: down
+      ctx.fillRect(x + 19, y - 10, 9,  6); // front thigh (raised)
+      ctx.fillRect(x + 21, y - 5,  6,  4); // front shin stub
+      ctx.fillRect(x + 10, y - 12, 8, 12); // back thigh+shin
+      ctx.fillRect(x + 8,  y,      13, 4); // back foot
+    }
+  }
+
+  function drawDeadDino(x, y) {
+    ctx.fillStyle = '#535353';
+    // Tail
+    ctx.fillRect(x,      y - 18, 11, 7);
+    ctx.fillRect(x - 5,  y - 14, 8,  5);
+    ctx.fillRect(x - 9,  y - 11, 6,  4);
+    // Body
+    ctx.fillRect(x + 8,  y - 32, 22, 22);
+    ctx.fillRect(x + 18, y - 46, 12, 18);
+    ctx.fillRect(x + 14, y - 52, 26, 14);
+    ctx.fillRect(x + 30, y - 48, 12, 7);
+    ctx.fillStyle = '#474747';
+    ctx.fillRect(x + 28, y - 42, 14, 5);
+    ctx.fillStyle = '#535353';
+    ctx.fillRect(x + 22, y - 22, 9,  5);
+    ctx.fillRect(x + 28, y - 19, 6,  4);
+    // Both legs down (slumped)
+    ctx.fillRect(x + 19, y - 12, 9, 12);
+    ctx.fillRect(x + 17, y,      13, 4);
+    ctx.fillRect(x + 10, y - 12, 8, 12);
+    ctx.fillRect(x + 8,  y,      13, 4);
+    // X eyes
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x+29, y-51); ctx.lineTo(x+35, y-45); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x+35, y-51); ctx.lineTo(x+29, y-45); ctx.stroke();
+  }
+
+  // ── Draw cactus ──────────────────────────────────────────────────────────────
+  function drawCactus(c) {
+    ctx.fillStyle = '#2e6018';
+    var gnd = GROUND;
+    if (c.type === 1) {
+      // Single wide cactus
+      ctx.fillRect(c.x + 8,  gnd - c.h,      10, c.h);      // trunk
+      ctx.fillRect(c.x,      gnd - c.h + 12,  10, 7);        // left arm
+      ctx.fillRect(c.x,      gnd - c.h + 5,    8, 14);        // left spike
+      ctx.fillRect(c.x + 16, gnd - c.h + 16,  10, 7);        // right arm
+      ctx.fillRect(c.x + 18, gnd - c.h + 8,    8, 16);        // right spike
+    } else {
+      // Tall double cactus
+      ctx.fillRect(c.x + 6,  gnd - c.h,       10, c.h);      // left trunk
+      ctx.fillRect(c.x,      gnd - c.h + 10,   8, 6);         // left arm
+      ctx.fillRect(c.x,      gnd - c.h + 4,    6, 14);        // left spike
+      ctx.fillRect(c.x + 14, gnd - c.h + 8,    8, 6);         // right arm of left
+      ctx.fillRect(c.x + 16, gnd - c.h + 2,    6, 14);        // right spike of left
+      ctx.fillRect(c.x + 28, gnd - (c.h - 6), 10, c.h - 6); // right trunk
+      ctx.fillRect(c.x + 24, gnd - c.h + 16,   8, 6);         // right arm
+      ctx.fillRect(c.x + 22, gnd - c.h + 10,   6, 14);        // right spike
+    }
+  }
+
+  // ── Draw cloud ───────────────────────────────────────────────────────────────
+  function drawCloud(cx, cy) {
+    ctx.fillStyle = 'rgba(160,160,160,0.55)';
+    ctx.fillRect(cx,      cy,     34, 9);
+    ctx.fillRect(cx + 6,  cy - 6, 20, 11);
+    ctx.fillRect(cx + 12, cy - 10, 12, 8);
+    ctx.fillRect(cx + 22, cy - 4, 10, 8);
+  }
+
+  function spawnObstacle() {
+    var type = Math.random() < 0.55 ? 1 : 2;
+    var h    = 30 + Math.floor(Math.random() * 18);
+    obstacles.push({ x: W + 20, h: h, type: type, w: type === 1 ? 26 : 48 });
+  }
+
+  function collides(d, c) {
+    // Shrink both boxes by 5px for fairness
+    var dx = d.x + 14, dy = d.y - d.h + 8, dw = 16, dh = d.h - 14;
+    var cx = c.x + 5,  cy = GROUND - c.h + 5, cw = c.w - 10, ch = c.h - 5;
+    return dx < cx + cw && dx + dw > cx && dy < cy + ch && dy + dh > cy;
+  }
+
+  function update() {
+    if (state !== 'running') return;
+    frameCount++;
+    score++;
+    speed  = calcSpeed();
+    scrollX += speed;
+
+    // Physics
+    dino.vy += 0.62;
+    dino.y  += dino.vy;
+    if (dino.y >= GROUND) { dino.y = GROUND; dino.vy = 0; dino.jumping = false; }
+
+    // Leg animation (faster stride at higher speeds)
+    var strideRate = Math.max(4, 10 - Math.floor(speed / 2));
+    if (!dino.jumping && frameCount % strideRate === 0) dino.leg = 1 - dino.leg;
+
+    // Obstacles
+    nextObstacle--;
+    if (nextObstacle <= 0) { spawnObstacle(); nextObstacle = obstacleGap(); }
+    obstacles.forEach(function (c) { c.x -= speed; });
+    obstacles = obstacles.filter(function (c) { return c.x + c.w > 0; });
+
+    // Clouds drift (speed up slightly with game speed)
+    var cloudSpeed = 0.5 + speed * 0.03;
+    clouds.forEach(function (cl) { cl.x -= cloudSpeed; if (cl.x < -50) cl.x = W + 30; });
+
+    // Collision
+    for (var i = 0; i < obstacles.length; i++) {
+      if (collides(dino, obstacles[i])) {
+        state = 'dead';
+        if (score > hiScore) { hiScore = score; localStorage.setItem('dino_hi', hiScore); }
+        return;
+      }
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Sky
+    ctx.fillStyle = '#f7f7f7';
+    ctx.fillRect(0, 0, W, H);
+
+    // Clouds
+    clouds.forEach(function (cl) { drawCloud(cl.x, cl.y); });
+
+    // Ground line
+    ctx.fillStyle = '#535353';
+    ctx.fillRect(0, GROUND + 4, W, 2);
+    // Ground texture (scroll with scrollX)
+    var offset = scrollX % 24;
+    for (var gx = -offset; gx < W; gx += 24) {
+      ctx.fillRect(gx,      GROUND + 8,  7, 2);
+      ctx.fillRect(gx + 12, GROUND + 12, 5, 2);
+    }
+
+    // Obstacles
+    obstacles.forEach(drawCactus);
+
+    // Dino
+    if (state === 'dead') {
+      drawDeadDino(dino.x, dino.y);
+    } else {
+      drawDino(dino.x, dino.y, dino.jumping ? 0 : dino.leg);
+    }
+
+    // Score (HI + current)
+    ctx.fillStyle = '#535353';
+    ctx.font = 'bold 14px Courier New, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('HI ' + String(hiScore).padStart(5,'0') + '  ' + String(score).padStart(5,'0'), W - 8, 20);
+    ctx.textAlign = 'left';
+
+    // Speed indicator (subtle)
+    if (state === 'running') {
+      ctx.fillStyle = '#aaa';
+      ctx.font = '10px Tahoma, sans-serif';
+      ctx.fillText('SPD ' + speed.toFixed(1), 8, 20);
+    }
+
+    // Overlays
+    if (state === 'idle') {
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillRect(W/2 - 140, H/2 - 22, 280, 40);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Press SPACE or click to start', W/2, H/2 + 4);
+      ctx.textAlign = 'left';
+    }
+    if (state === 'dead') {
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillRect(W/2 - 130, H/2 - 28, 260, 52);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 14px Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', W/2, H/2 - 6);
+      ctx.font = '11px Tahoma, sans-serif';
+      ctx.fillText('Press SPACE or click to restart', W/2, H/2 + 14);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  function loop() { update(); render(); requestAnimationFrame(loop); }
+  loop();
+})();
+</script>
+
+</body>
+</html>

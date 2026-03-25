@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Windows XP Website</title>
+  <style>
+    /* =============================================
+       WINDOWS XP THEME — 90s Website Template
+       ============================================= */
+
+    @import url('https://fonts.googleapis.com/css2?family=Tahoma&display=swap');
+
+    :root {
+      --xp-blue:       #0a246a;
+      --xp-blue-mid:   #3169c4;
+      --xp-blue-light: #4d84f5;
+      --xp-title-grad: linear-gradient(to bottom, #0058e6 0%, #3a6fe8 4%, #0058e6 6%, #2162e8 45%, #0554e6 46%, #1b63f5 100%);
+      --xp-gray:       #ece9d8;
+      --xp-border-hi:  #ffffff;
+      --xp-border-sh:  #848484;
+      --xp-border-dk:  #0a246a;
+      --xp-green:      #3a6e28;
+      --xp-btn:        #ece9d8;
+      --xp-taskbar:    linear-gradient(to bottom, #1f5fae 0%, #3a82d4 8%, #245dbf 50%, #1d52a8 100%);
+      --xp-start:      linear-gradient(to bottom, #57a12d 0%, #3f8b1a 50%, #2d6e10 100%);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Tahoma, Geneva, sans-serif;
+      font-size: 11px;
+
+      /* ── REVERT: swap the two background blocks below to go back to solid green ── */
+
+      /* OLD — solid green desktop
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="%23267726"/></svg>') #3a7b3a;
+      background-image: radial-gradient(ellipse 120% 80% at 50% 110%, #7bcf7b 0%, #4aad4a 30%, #267726 60%, #0f5f0f 100%);
+      */
+
+      /* NEW — Windows XP "Bliss" wallpaper */
+      background-color: #4a9fd4;
+      background-image: url('bliss.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+
+      min-height: 100vh;
+      padding-bottom: 44px; /* taskbar height */
+      overflow-x: hidden;
+    }
+
+    /* ---- DESKTOP ICONS ---- */
+    .desktop {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100px;
+    }
+
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px;
+      width: 72px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000, -1px -1px 2px #000;
+      font-size: 11px;
+      user-select: none;
+    }
+    .desktop-icon:hover {
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(100,150,255,0.25);
+    }
+    .desktop-icon .icon-img {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    /* ---- MAIN CONTENT AREA ---- */
+    .desktop-content {
+      position: absolute;
+      top: 0;
+      left: 100px;
+      right: 0;
+      bottom: 44px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+
+    /* ---- WINDOW ---- */
+    .window {
+      background: var(--xp-gray);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      outline: 1px solid var(--xp-blue);
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .window-titlebar {
+      background: var(--xp-title-grad);
+      padding: 3px 4px 4px 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+      min-height: 28px;
+    }
+
+    .window-titlebar .icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .window-titlebar .title {
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
+      text-shadow: 1px 1px 2px rgba(0,0,80,0.8);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .win-btns {
+      display: flex;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .win-btn {
+      width: 21px;
+      height: 21px;
+      font-size: 10px;
+      font-weight: bold;
+      font-family: Marlett, Tahoma, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: linear-gradient(to bottom, #dfe0e0 0%, #bbbcbc 100%);
+      color: #000;
+      flex-shrink: 0;
+    }
+    .win-btn:hover { background: linear-gradient(to bottom, #eff0f0 0%, #cfcfcf 100%); }
+    .win-btn:active { border-color: #848484 #fff #fff #848484; }
+    .win-btn.close { background: linear-gradient(to bottom, #d84040 0%, #a82020 100%); color: #fff; }
+    .win-btn.close:hover { background: linear-gradient(to bottom, #e85050 0%, #c03030 100%); }
+
+    /* Menubar */
+    .window-menu {
+      background: var(--xp-gray);
+      border-bottom: 1px solid #848484;
+      padding: 2px 0;
+      display: flex;
+    }
+    .menu-item {
+      padding: 2px 8px;
+      cursor: pointer;
+      color: #000;
+    }
+    .menu-item:hover {
+      background: var(--xp-blue-mid);
+      color: #fff;
+    }
+
+    /* Toolbar */
+    .window-toolbar {
+      background: var(--xp-gray);
+      border-bottom: 1px solid #848484;
+      padding: 2px 4px;
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+    .toolbar-btn {
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      background: var(--xp-btn);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .toolbar-btn:hover { background: #d4d0c8; }
+    .toolbar-btn:active { border-color: #848484 #fff #fff #848484; }
+    .toolbar-sep { width: 1px; height: 20px; background: #848484; margin: 0 3px; box-shadow: 1px 0 0 #fff; }
+
+    /* Address bar */
+    .window-address {
+      background: var(--xp-gray);
+      border-bottom: 1px solid #848484;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .addr-label { font-size: 11px; font-weight: bold; }
+    .addr-bar {
+      flex: 1;
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      padding: 1px 4px;
+      border: 2px inset;
+      border-color: #848484 #fff #fff #848484;
+      background: #fff;
+    }
+    .addr-go {
+      padding: 1px 8px;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      background: var(--xp-btn);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      cursor: pointer;
+    }
+
+    /* Window body */
+    .window-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .window-sidebar {
+      width: 140px;
+      background: linear-gradient(to bottom, #316ac5 0%, #4a80d4 100%);
+      color: #fff;
+      padding: 0;
+      flex-shrink: 0;
+      border-right: 1px solid #0a246a;
+    }
+    .sidebar-section {
+      margin-bottom: 0;
+    }
+    .sidebar-heading {
+      background: rgba(0,0,0,0.3);
+      padding: 4px 8px;
+      font-weight: bold;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #cce0ff;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.15); text-decoration: underline; }
+    .sidebar-link .sicon { font-size: 16px; vertical-align: middle; }
+    .sidebar-link img.sicon { width: 16px; height: 16px; vertical-align: middle; display: inline-block; }
+
+    /* Content pane */
+    .window-content {
+      flex: 1;
+      padding: 8px;
+      overflow-y: auto;
+      background: #fff;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #000;
+    }
+
+    /* Status bar */
+    .window-statusbar {
+      background: var(--xp-gray);
+      border-top: 1px solid #848484;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #555;
+      display: flex;
+      gap: 8px;
+    }
+    .statusbar-panel {
+      border: 1px inset #848484;
+      padding: 0 6px;
+      flex: 1;
+    }
+
+    /* ---- XP BUTTON STYLE ---- */
+    .xp-btn {
+      display: inline-block;
+      padding: 4px 18px;
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      background: linear-gradient(to bottom, #fff 0%, #ece9d8 50%, #d4d0c8 51%, #ece9d8 100%);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      outline: 1px solid var(--xp-blue);
+      cursor: pointer;
+      color: #000;
+    }
+    .xp-btn:hover { background: linear-gradient(to bottom, #fff 0%, #dfe8ff 50%, #c5d4ff 51%, #dfe8ff 100%); }
+    .xp-btn:active { border-color: #848484 #fff #fff #848484; }
+    .xp-btn.primary {
+      background: linear-gradient(to bottom, #4a90d9 0%, #1a6bc4 50%, #1460b8 51%, #1a6bc4 100%);
+      color: #fff;
+      border-color: #7ab0e8 #0a3d8a #0a3d8a #7ab0e8;
+      text-shadow: 0 1px 1px rgba(0,0,60,0.6);
+    }
+    .xp-btn.primary:hover { background: linear-gradient(to bottom, #5aa0e9 0%, #2a7bd4 50%, #2470c8 51%, #2a7bd4 100%); }
+
+    /* ---- XP INPUT STYLE ---- */
+    .xp-input {
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      padding: 2px 4px;
+      border: 2px inset;
+      border-color: #848484 #fff #fff #848484;
+      background: #fff;
+    }
+    .xp-input:focus { outline: 1px solid var(--xp-blue-mid); }
+
+    .xp-select {
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      padding: 2px 4px;
+      border: 2px inset;
+      border-color: #848484 #fff #fff #848484;
+      background: #fff;
+    }
+
+    /* ---- XP CHECKBOX / RADIO ---- */
+    .xp-check { margin-right: 4px; }
+
+    /* ---- XP GROUPBOX ---- */
+    .xp-group {
+      border: 1px solid #848484;
+      border-top: none;
+      padding: 8px;
+      margin-top: 8px;
+      position: relative;
+    }
+    .xp-group-title {
+      position: absolute;
+      top: -8px;
+      left: 8px;
+      background: var(--xp-gray);
+      padding: 0 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* ---- PROGRESS BAR ---- */
+    .xp-progress {
+      height: 14px;
+      background: #fff;
+      border: 2px inset;
+      border-color: #848484 #fff #fff #848484;
+      overflow: hidden;
+    }
+    .xp-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #3169c4, #4d84f5);
+      background-size: 20px 100%;
+      animation: progress-stripe 0.8s linear infinite;
+    }
+    @keyframes progress-stripe {
+      from { background-position: 0 0; }
+      to   { background-position: 20px 0; }
+    }
+
+    /* ---- SCROLLBAR ---- */
+    ::-webkit-scrollbar { width: 16px; height: 16px; }
+    ::-webkit-scrollbar-track { background: #d4d0c8; border: 1px inset; border-color: #848484 #fff #fff #848484; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(to right, #e0ddd0, #c8c4b8); border: 1px solid #848484; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(to right, #d4d0c8, #b8b4a8); }
+    ::-webkit-scrollbar-button { background: var(--xp-gray); border: 1px outset; width: 16px; height: 16px; }
+    ::-webkit-scrollbar-corner { background: var(--xp-gray); }
+
+    /* ---- 90s CONTENT STYLES ---- */
+    .marquee-bar {
+      background: #000080;
+      color: #ffff00;
+      padding: 2px 0;
+      font-size: 12px;
+      font-weight: bold;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-inner {
+      display: inline-block;
+      animation: marquee 14s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(100%); }
+      to   { transform: translateX(-100%); }
+    }
+
+    .rainbow-text {
+      font-weight: bold;
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hit-counter {
+      display: inline-block;
+      background: #000;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      padding: 2px 6px;
+      border: 2px inset #888;
+      letter-spacing: 2px;
+    }
+
+    .under-construction {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #c00;
+      font-weight: bold;
+    }
+
+    table.xp-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+    }
+    table.xp-table th {
+      background: var(--xp-blue);
+      color: #fff;
+      padding: 3px 6px;
+      text-align: left;
+      border: 1px solid #848484;
+    }
+    table.xp-table td {
+      padding: 3px 6px;
+      border: 1px solid #d4d0c8;
+    }
+    table.xp-table tr:nth-child(even) td { background: #f0f0e8; }
+    table.xp-table tr:hover td { background: #dce8ff; }
+
+    /* ---- TASKBAR ---- */
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: var(--xp-taskbar);
+      border-top: 2px solid #1f5fae;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 2px;
+      z-index: 9999;
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.5);
+    }
+
+    .start-btn {
+      height: 34px;
+      padding: 0 12px 0 8px;
+      background: var(--xp-start);
+      border: 1px solid #215e0e;
+      border-radius: 0 12px 12px 0;
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: Tahoma, sans-serif;
+      text-shadow: 0 1px 2px rgba(0,60,0,0.8);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+    .start-btn:hover { background: linear-gradient(to bottom, #67b13d 0%, #7acf48 8%, #5aba32 45%, #4aaa20 46%, #5ac030 100%); }
+    .start-btn .win-logo { width: 22px; height: 22px; flex-shrink: 0; }
+
+    .taskbar-sep { width: 1px; height: 30px; background: rgba(0,0,0,0.4); box-shadow: 1px 0 0 rgba(255,255,255,0.2); margin: 0 4px; flex-shrink: 0; }
+
+    .taskbar-btn {
+      height: 28px;
+      padding: 0 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .taskbar-btn:hover { background: rgba(255,255,255,0.2); }
+    .taskbar-btn.active { background: rgba(0,0,0,0.2); border-style: inset; }
+
+    .taskbar-tray {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+      height: 100%;
+      background: rgba(0,0,0,0.25);
+      border-left: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .tray-icon { font-size: 16px; cursor: pointer; }
+    .tray-clock { font-size: 11px; text-align: center; line-height: 1.3; }
+
+    /* ---- DIALOG / ALERT ---- */
+    .xp-dialog {
+      background: var(--xp-gray);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      outline: 1px solid var(--xp-blue);
+      box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
+      width: 320px;
+    }
+    .dialog-body {
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .dialog-icon { font-size: 32px; flex-shrink: 0; }
+    .dialog-text { font-size: 11px; line-height: 1.6; }
+    .dialog-footer {
+      padding: 8px;
+      border-top: 1px solid #848484;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ---- LAYOUT HELPERS ---- */
+    h1 { font-size: 14px; font-weight: bold; margin-bottom: 6px; color: var(--xp-blue); }
+    h2 { font-size: 12px; font-weight: bold; margin-bottom: 4px; }
+    p  { margin-bottom: 6px; }
+    a  { color: var(--xp-blue-mid); }
+    a:visited { color: #800080; }
+    hr { border: none; border-top: 1px solid #848484; border-bottom: 1px solid #fff; margin: 6px 0; }
+
+    .flex  { display: flex; }
+    .gap4  { gap: 4px; }
+    .gap8  { gap: 8px; }
+    .mt8   { margin-top: 8px; }
+    .mb8   { margin-bottom: 8px; }
+    .p8    { padding: 8px; }
+    .bold  { font-weight: bold; }
+    .label { font-size: 11px; margin-bottom: 2px; display: block; }
+    .w100  { width: 100%; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- ========== DESKTOP ICONS ========== -->
+<div class="desktop">
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/computer.svg" width="32" height="32" alt=""/></div>
+    <span>My Computer</span>
+  </div>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/folder.svg" width="32" height="32" alt=""/></div>
+    <span>My Documents</span>
+  </div>
+  <a href="ie-error.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/ie.svg" width="32" height="32" alt=""/></div>
+    <span>Internet Explorer</span>
+  </a>
+  <a href="gallery.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/camera.svg" width="32" height="32" alt=""/></div>
+    <span>Gallery</span>
+  </a>
+  <a href="guestbook.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/book.svg" width="32" height="32" alt=""/></div>
+    <span>Guestbook</span>
+  </a>
+  <a href="music.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/music.svg" width="32" height="32" alt=""/></div>
+    <span>iTunes</span>
+  </a>
+  <a href="about.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/person.svg" width="32" height="32" alt=""/></div>
+    <span>About Me</span>
+  </a>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/bin.svg" width="32" height="32" alt=""/></div>
+    <span>Recycle Bin</span>
+  </div>
+</div>
+
+<!-- ========== DESKTOP CONTENT ========== -->
+<div class="desktop-content">
+
+  <!-- WINDOW 1: Main Browser Window -->
+  <div class="window" style="width:600px;">
+    <div class="window-titlebar">
+      <span class="icon">🌐</span>
+      <span class="title">Welcome to My Website! — Windows Internet Explorer</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="window-menu">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Favorites</span>
+      <span class="menu-item">Tools</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="window-toolbar">
+      <button class="toolbar-btn">⬅ Back</button>
+      <button class="toolbar-btn">➡ Forward</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">🔄 Refresh</button>
+      <button class="toolbar-btn">🏠 Home</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">⭐ Favorites</button>
+      <button class="toolbar-btn">📰 History</button>
+    </div>
+    <div class="window-address">
+      <span class="addr-label">Address</span>
+      <input class="addr-bar" type="text" value="http://www.mywebsite.com/index.html" />
+      <button class="addr-go">Go</button>
+    </div>
+    <div class="window-body">
+      <div class="window-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-heading">Navigation</div>
+          <a class="sidebar-link" href="index.html"><img class="sicon" src="icons/home.svg" width="16" height="16" alt=""/> Home</a>
+          <a class="sidebar-link" href="about.html"><img class="sicon" src="icons/person.svg" width="16" height="16" alt=""/> About Me</a>
+          <a class="sidebar-link" href="gallery.html"><img class="sicon" src="icons/camera.svg" width="16" height="16" alt=""/> Photo Gallery</a>
+          <a class="sidebar-link" href="music.html"><img class="sicon" src="icons/music.svg" width="16" height="16" alt=""/> My Music</a>
+          <a class="sidebar-link" href="guestbook.html"><img class="sicon" src="icons/book.svg" width="16" height="16" alt=""/> Guestbook</a>
+          <a class="sidebar-link" href="#"><span class="sicon">🔗</span> Cool Links</a>
+        </div>
+        <div class="sidebar-section" style="margin-top:8px;">
+          <div class="sidebar-heading">Details</div>
+          <a class="sidebar-link" href="#"><span class="sicon">📧</span> Contact</a>
+          <a class="sidebar-link" href="#"><span class="sicon">🗒️</span> Downloads</a>
+        </div>
+      </div>
+      <div class="window-content">
+
+        <!-- Marquee -->
+        <div class="marquee-bar">
+          <span class="marquee-inner">
+            🌟 WELCOME TO MY SUPER COOL WEBSITE!! 🌟 &nbsp;&nbsp;&nbsp; Best viewed in 800x600 resolution &nbsp;&nbsp;&nbsp; 🔥 UNDER CONSTRUCTION 🔥 &nbsp;&nbsp;&nbsp; Sign my guestbook!! &nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+
+        <div style="padding: 8px;">
+          <h1 class="rainbow-text">Welcome to My Totally Radical Homepage!!</h1>
+          <hr />
+
+          <p>Hello and welcome to my <strong>AWESOME</strong> personal homepage! You are visitor number <span class="hit-counter" id="hit-counter">000001</span> — thanks for stopping by!! 😎</p>
+          <script>
+            (function () {
+              var COUNT_KEY = 'xp_visitor_count';
+              var SESSION_KEY = 'xp_visited_this_session';
+              var count = parseInt(localStorage.getItem(COUNT_KEY) || '0', 10);
+              // Only increment once per browser session
+              if (!sessionStorage.getItem(SESSION_KEY)) {
+                count += 1;
+                localStorage.setItem(COUNT_KEY, count);
+                sessionStorage.setItem(SESSION_KEY, '1');
+              }
+              document.getElementById('hit-counter').textContent =
+                String(count).padStart(6, '0');
+            })();
+          </script>
+
+          <p>This site is best viewed in <strong>Internet Explorer 6.0</strong> with 800×600 resolution. Please enable JavaScript and cookies for the best experience!</p>
+
+          <div class="under-construction">
+            <span style="font-size:20px;">🚧</span>
+            <span>This page is under construction! Check back soon for updates!</span>
+            <span style="font-size:20px;">🚧</span>
+          </div>
+
+          <hr />
+
+          <!-- Y2K COUNTDOWN -->
+          <h2>⚠️ Y2K Countdown ⚠️</h2>
+          <div id="y2k-box" style="
+            background: #000;
+            border: 3px solid;
+            border-color: #ff0000 #660000 #660000 #ff0000;
+            padding: 8px 10px;
+            margin: 8px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+          ">
+            <div style="color:#ff0000; font-size:11px; font-weight:bold; letter-spacing:1px; margin-bottom:4px;">
+              ⚠️ WARNING — THE MILLENNIUM BUG IS COMING ⚠️
+            </div>
+            <div style="color:#ffff00; font-size:10px; margin-bottom:6px;">
+              Time until January 1, 2000 — ALL COMPUTERS MAY FAIL!!
+            </div>
+            <div id="y2k-display" style="
+              display: flex;
+              justify-content: center;
+              gap: 8px;
+              flex-wrap: wrap;
+            ">
+              <div class="y2k-unit"><span class="y2k-num" id="y2k-d">---</span><span class="y2k-lbl">DAYS</span></div>
+              <div class="y2k-sep">:</div>
+              <div class="y2k-unit"><span class="y2k-num" id="y2k-h">--</span><span class="y2k-lbl">HRS</span></div>
+              <div class="y2k-sep">:</div>
+              <div class="y2k-unit"><span class="y2k-num" id="y2k-m">--</span><span class="y2k-lbl">MIN</span></div>
+              <div class="y2k-sep">:</div>
+              <div class="y2k-unit"><span class="y2k-num" id="y2k-s">--</span><span class="y2k-lbl">SEC</span></div>
+            </div>
+            <div id="y2k-passed" style="display:none; color:#00ff00; font-size:12px; font-weight:bold; padding:4px 0;">
+              🎉 Y2K HAS PASSED!! WE SURVIVED!! 🎉
+            </div>
+            <div style="color:#ff6666; font-size:9px; margin-top:6px;">
+              STOCK UP ON CANNED GOODS &nbsp;|&nbsp; WITHDRAW YOUR SAVINGS &nbsp;|&nbsp; DON'T FLY ON NEW YEAR'S EVE
+            </div>
+          </div>
+
+          <style>
+            .y2k-unit { display:flex; flex-direction:column; align-items:center; }
+            .y2k-num  { font-size:22px; font-weight:bold; color:#ff4444; font-family:'Courier New',monospace; min-width:44px; text-align:center; }
+            .y2k-lbl  { font-size:8px; color:#ff9999; letter-spacing:1px; margin-top:1px; }
+            .y2k-sep  { font-size:22px; font-weight:bold; color:#ff4444; align-self:flex-start; padding-top:0; }
+          </style>
+
+          <script>
+            (function() {
+              var target = new Date('2000-01-01T00:00:00');
+              function tick() {
+                var now = new Date();
+                var diff = target - now;
+                if (diff <= 0) {
+                  document.getElementById('y2k-display').style.display = 'none';
+                  document.getElementById('y2k-passed').style.display  = 'block';
+                  return;
+                }
+                var d = Math.floor(diff / 86400000);
+                var h = Math.floor((diff % 86400000) / 3600000);
+                var m = Math.floor((diff % 3600000)  / 60000);
+                var s = Math.floor((diff % 60000)    / 1000);
+                document.getElementById('y2k-d').textContent = String(d);
+                document.getElementById('y2k-h').textContent = String(h).padStart(2,'0');
+                document.getElementById('y2k-m').textContent = String(m).padStart(2,'0');
+                document.getElementById('y2k-s').textContent = String(s).padStart(2,'0');
+              }
+              tick();
+              setInterval(tick, 1000);
+            })();
+          </script>
+
+          <hr />
+          <h2>🎵 Now Playing</h2>
+          <div class="xp-group" style="margin-top: 12px;">
+            <div class="xp-group-title">Windows Media Player</div>
+
+            <!-- Hidden HTML5 audio element -->
+            <audio id="wmpAudio" preload="auto"></audio>
+
+            <!-- Visualizer -->
+            <div id="wmpViz" style="display:flex; align-items:flex-end; gap:2px; height:28px; padding:2px 0; margin-top:4px;">
+              <!-- bars injected by JS -->
+            </div>
+
+            <!-- Track info -->
+            <div class="flex gap8" style="align-items:center; margin-top:4px;">
+              <span id="wmpIcon" style="font-size:24px;">🎵</span>
+              <div style="min-width:0; flex:1;">
+                <div class="bold" id="wmpTitle" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Loading...</div>
+                <div style="color:#555;" id="wmpAlbum"></div>
+              </div>
+              <div style="display:flex; gap:2px; flex-shrink:0;">
+                <button class="xp-btn" onclick="wmpPrev()" title="Previous">⏮</button>
+                <button class="xp-btn primary" id="wmpPlayBtn" onclick="wmpToggle()">▶ Play</button>
+                <button class="xp-btn" onclick="wmpNext()" title="Next">⏭</button>
+                <button class="xp-btn" id="wmpMuteBtn" onclick="wmpMute()" title="Mute" style="padding:4px 8px;">🔊</button>
+              </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="mt8">
+              <div class="xp-progress" id="wmpProgressBar" onclick="wmpSeek(event)" style="cursor:pointer;">
+                <div class="xp-progress-fill" id="wmpProgress" style="width:0%; animation:none; background:#316ac5; transition:width 0.5s linear;"></div>
+              </div>
+              <div class="flex" style="justify-content:space-between; margin-top:2px; color:#555;">
+                <span id="wmpCurrent">0:00</span>
+                <span id="wmpDuration">0:00</span>
+              </div>
+            </div>
+
+            <!-- Volume -->
+            <div class="flex gap8 mt8" style="align-items:center;">
+              <span style="font-size:11px; color:#555;">Volume:</span>
+              <input type="range" id="wmpVolume" min="0" max="100" value="80"
+                style="flex:1; accent-color:#316ac5;" oninput="wmpSetVolume(this.value)" />
+              <span id="wmpVolLabel" style="font-size:10px; color:#555; width:28px;">80%</span>
+            </div>
+
+            <!-- Playlist -->
+            <div style="margin-top:8px; border:1px inset #848484; background:#fff;">
+              <div style="background:var(--xp-blue); color:#fff; font-size:10px; padding:2px 6px; font-weight:bold;">Playlist</div>
+              <div id="wmpPlaylist" style="max-height:80px; overflow-y:auto;"></div>
+            </div>
+          </div>
+
+          <hr />
+          <h2>📰 Latest News</h2>
+          <table class="xp-table mb8">
+            <thead>
+              <tr><th>Date</th><th>Update</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>03/25/2003</td><td>Added new photos to the gallery!</td><td>✅ Done</td></tr>
+              <tr><td>03/20/2003</td><td>Updated my music page with new MP3s</td><td>✅ Done</td></tr>
+              <tr><td>03/15/2003</td><td>New guestbook system coming soon</td><td>🚧 WIP</td></tr>
+              <tr><td>03/10/2003</td><td>Site redesign with Windows XP theme</td><td>✅ Done</td></tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+    <div class="window-statusbar">
+      <div class="statusbar-panel">Done</div>
+      <div class="statusbar-panel" style="flex:0 0 160px;">Internet</div>
+    </div>
+  </div>
+
+  <!-- WINDOW 2: My Computer -->
+  <div class="window" style="width:300px; align-self: flex-start;">
+    <div class="window-titlebar">
+      <span class="icon">🖥️</span>
+      <span class="title">My Computer</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="window-menu">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Tools</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="window-body">
+      <div class="window-sidebar" style="width:120px;">
+        <div class="sidebar-heading">System Tasks</div>
+        <a class="sidebar-link" href="#"><img class="sicon" src="icons/computer.svg" width="16" height="16" alt=""/> System Info</a>
+        <a class="sidebar-link" href="#"><span class="sicon">⚙️</span> Control Panel</a>
+        <a class="sidebar-link" href="#"><span class="sicon">🖨️</span> Printers</a>
+      </div>
+      <div class="window-content">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; padding:4px;">
+          <div style="text-align:center; cursor:pointer; padding:6px;">
+            <div style="font-size:28px;">💿</div>
+            <div style="font-size:10px;">Local Disk (C:)</div>
+            <div style="font-size:9px; color:#555;">8.4 GB free of 20 GB</div>
+            <div class="xp-progress mt8" style="height:8px;">
+              <div class="xp-progress-fill" style="width:58%; animation:none; background:#316ac5;"></div>
+            </div>
+          </div>
+          <div style="text-align:center; cursor:pointer; padding:6px;">
+            <div style="font-size:28px;">📀</div>
+            <div style="font-size:10px;">CD Drive (D:)</div>
+            <div style="font-size:9px; color:#555;">No media</div>
+          </div>
+          <div style="text-align:center; cursor:pointer; padding:6px;">
+            <div style="font-size:28px;">💾</div>
+            <div style="font-size:10px;">Floppy (A:)</div>
+            <div style="font-size:9px; color:#555;">1.44 MB</div>
+          </div>
+          <div style="text-align:center; cursor:pointer; padding:6px;">
+            <div style="font-size:28px;">🖨️</div>
+            <div style="font-size:10px;">Shared Docs</div>
+            <div style="font-size:9px; color:#555;">\\Network</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="window-statusbar">
+      <div class="statusbar-panel">4 objects</div>
+    </div>
+  </div>
+
+  <!-- WINDOW 3: Dialog Box -->
+  <div class="xp-dialog" style="align-self:flex-start;">
+    <div class="window-titlebar">
+      <span class="icon">⚠️</span>
+      <span class="title">Warning</span>
+      <div class="win-btns">
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-icon">⚠️</div>
+      <div class="dialog-text">
+        <strong>You've got mail!</strong><br /><br />
+        You have <strong>13 unread messages</strong> in your inbox. Would you like to open Outlook Express now?<br /><br />
+        Do not show this message again: <input type="checkbox" class="xp-check" />
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="xp-btn primary">Yes</button>
+      <button class="xp-btn">No</button>
+      <button class="xp-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- WINDOW 4: Contact Form -->
+  <div class="window" style="width:300px; align-self:flex-start;">
+    <div class="window-titlebar">
+      <span class="icon">📧</span>
+      <span class="title">Contact Me — Outlook Express</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="window-toolbar">
+      <button class="toolbar-btn primary xp-btn" style="font-size:11px;">📤 Send</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">📎 Attach</button>
+      <button class="toolbar-btn">✂️ Cut</button>
+      <button class="toolbar-btn">📋 Paste</button>
+    </div>
+    <div class="window-content" style="padding:8px;">
+      <div class="mb8">
+        <label class="label">To:</label>
+        <input class="xp-input w100" type="text" placeholder="webmaster@mysite.com" />
+      </div>
+      <div class="mb8">
+        <label class="label">Subject:</label>
+        <input class="xp-input w100" type="text" placeholder="Hey there!" />
+      </div>
+      <div class="mb8">
+        <label class="label">Message:</label>
+        <textarea class="xp-input w100" rows="5" placeholder="Type your message here..."></textarea>
+      </div>
+      <div class="mb8">
+        <label class="label">Priority:</label>
+        <select class="xp-select">
+          <option>Normal</option>
+          <option>High</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <div class="flex gap8" style="justify-content:flex-end;">
+        <button class="xp-btn primary">📤 Send</button>
+        <button class="xp-btn">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== TASKBAR ========== -->
+<div class="taskbar">
+  <a href="index.html" class="start-btn">
+    <img class="win-logo" src="icons/winlogo.svg" alt=""/>
+    <span>start</span>
+  </a>
+  <div class="taskbar-sep"></div>
+  <a href="index.html" class="taskbar-btn active">🌐 My Homepage</a>
+  <a href="about.html" class="taskbar-btn">👤 About Me</a>
+  <a href="gallery.html" class="taskbar-btn">📸 Photo Gallery</a>
+  <a href="music.html" class="taskbar-btn">🎵 My Music</a>
+  <a href="guestbook.html" class="taskbar-btn">📖 Guestbook</a>
+  <div class="taskbar-tray">
+    <span class="tray-icon" id="tray-volume" title="Volume — click to mute" style="cursor:pointer;">🔊</span>
+    <span class="tray-icon" title="Network">🌐</span>
+    <span class="tray-icon" title="Antivirus">🛡️</span>
+    <div class="tray-clock">
+      <div id="tray-time">12:00 PM</div>
+      <div id="tray-date" style="font-size:9px; color:#cce0ff;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CLOCK ──────────────────────────────────────────────────────────────────
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    document.getElementById('tray-time').textContent = h12 + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+    document.getElementById('tray-date').textContent =
+      (now.getMonth()+1) + '/' + now.getDate() + '/' + now.getFullYear();
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  // ── WINDOWS MEDIA PLAYER ───────────────────────────────────────────────────
+  const wmpTracks = [
+    { title: 'Linkin Park — In The End',           album: 'Hybrid Theory (2000)',      icon: '🎸', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { title: 'Evanescence — Bring Me To Life',     album: 'Fallen (2003)',             icon: '🎵', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { title: 'Good Charlotte — The Anthem',        album: 'The Young & the Hopeless (2002)', icon: '🎵', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+    { title: 'Avril Lavigne — Complicated',        album: 'Let Go (2002)',             icon: '🎵', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+    { title: 'Nickelback — How You Remind Me',     album: 'Silver Side Up (2001)',     icon: '🎵', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+  ];
+
+  let wmpIndex = 0;
+  let wmpPlaying = false;
+  let wmpMuted = false;
+  let wmpVizInterval = null;
+  const audio = document.getElementById('wmpAudio');
+
+  // Build visualizer bars
+  const viz = document.getElementById('wmpViz');
+  const BAR_COUNT = 28;
+  for (let i = 0; i < BAR_COUNT; i++) {
+    const b = document.createElement('div');
+    b.style.cssText = 'flex:1; background:linear-gradient(to top,#0a5cbf,#4d84f5); border-radius:1px 1px 0 0; height:4px; transition:height 0.1s;';
+    viz.appendChild(b);
+  }
+
+  function animateViz() {
+    if (!wmpPlaying) return;
+    const bars = viz.children;
+    for (let i = 0; i < bars.length; i++) {
+      const h = Math.random() * 22 + 2;
+      bars[i].style.height = h + 'px';
+    }
+  }
+
+  function wmpLoadTrack(idx) {
+    const t = wmpTracks[idx];
+    audio.src = t.src;
+    audio.volume = document.getElementById('wmpVolume').value / 100;
+    document.getElementById('wmpTitle').textContent = t.title;
+    document.getElementById('wmpAlbum').textContent = t.album;
+    document.getElementById('wmpIcon').textContent = t.icon;
+    document.getElementById('wmpProgress').style.width = '0%';
+    document.getElementById('wmpCurrent').textContent = '0:00';
+    document.getElementById('wmpDuration').textContent = '0:00';
+    renderPlaylist();
+  }
+
+  function wmpToggle() {
+    if (wmpPlaying) {
+      audio.pause();
+      wmpPlaying = false;
+      document.getElementById('wmpPlayBtn').textContent = '▶ Play';
+      clearInterval(wmpVizInterval);
+      // reset bars
+      Array.from(viz.children).forEach(b => b.style.height = '4px');
+    } else {
+      audio.play().catch(() => {});
+      wmpPlaying = true;
+      document.getElementById('wmpPlayBtn').textContent = '⏸ Pause';
+      wmpVizInterval = setInterval(animateViz, 120);
+    }
+  }
+
+  function wmpNext() {
+    wmpIndex = (wmpIndex + 1) % wmpTracks.length;
+    wmpLoadTrack(wmpIndex);
+    if (wmpPlaying) audio.play().catch(() => {});
+    else { wmpPlaying = false; document.getElementById('wmpPlayBtn').textContent = '▶ Play'; }
+  }
+
+  function wmpPrev() {
+    if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+    wmpIndex = (wmpIndex - 1 + wmpTracks.length) % wmpTracks.length;
+    wmpLoadTrack(wmpIndex);
+    if (wmpPlaying) audio.play().catch(() => {});
+  }
+
+  function wmpMute() {
+    wmpMuted = !wmpMuted;
+    audio.muted = wmpMuted;
+    document.getElementById('wmpMuteBtn').textContent = wmpMuted ? '🔇' : '🔊';
+  }
+
+  function wmpSetVolume(v) {
+    audio.volume = v / 100;
+    document.getElementById('wmpVolLabel').textContent = v + '%';
+  }
+
+  function wmpSeek(e) {
+    const bar = document.getElementById('wmpProgressBar');
+    const ratio = e.offsetX / bar.offsetWidth;
+    if (audio.duration) audio.currentTime = ratio * audio.duration;
+  }
+
+  function fmtTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2,'0');
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    document.getElementById('wmpProgress').style.width = pct + '%';
+    document.getElementById('wmpCurrent').textContent = fmtTime(audio.currentTime);
+    document.getElementById('wmpDuration').textContent = fmtTime(audio.duration);
+  });
+
+  audio.addEventListener('ended', wmpNext);
+
+  audio.addEventListener('loadedmetadata', () => {
+    document.getElementById('wmpDuration').textContent = fmtTime(audio.duration);
+  });
+
+  function renderPlaylist() {
+    const pl = document.getElementById('wmpPlaylist');
+    pl.innerHTML = '';
+    wmpTracks.forEach((t, i) => {
+      const row = document.createElement('div');
+      row.style.cssText = `padding:2px 6px; font-size:10px; cursor:pointer; display:flex; align-items:center; gap:4px;
+        background:${i === wmpIndex ? '#dce8ff' : (i%2===0?'#fff':'#f8f8f0')};
+        font-weight:${i === wmpIndex ? 'bold' : 'normal'};`;
+      row.innerHTML = `<span>${i === wmpIndex ? '▶' : (i+1)+'.'}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</span>`;
+      row.onclick = () => { wmpIndex = i; wmpLoadTrack(i); if (wmpPlaying) audio.play().catch(()=>{}); };
+      pl.appendChild(row);
+    });
+  }
+
+  // Init
+  wmpLoadTrack(0);
+</script>
+<script src="xp-theme.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Music — iTunes</title>
+  <style>
+    /* =============================================
+       ITUNES CLASSIC — Brushed Metal Era (v4–v7)
+       ============================================= */
+
+    @import url('https://fonts.googleapis.com/css2?family=Lucida+Grande&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --chrome-top:    #c2c2c2;
+      --chrome-mid:    #a8a8a8;
+      --chrome-bot:    #888;
+      --sidebar-bg:    #3b3b3b;
+      --sidebar-sel:   #2a5db0;
+      --sidebar-hover: #4a4a4a;
+      --sidebar-head:  #252525;
+      --table-even:    #f2f6ff;
+      --table-odd:     #ffffff;
+      --table-sel:     #3875d7;
+      --table-sel2:    #6fa0e0;
+      --col-head:      #d8d8d8;
+      --border:        #8a8a8a;
+      --playing-color: #0060cc;
+      --btn-chrome:    linear-gradient(to bottom, #e8e8e8 0%, #c0c0c0 50%, #b0b0b0 51%, #c4c4c4 100%);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Lucida Grande', 'Segoe UI', Tahoma, Geneva, sans-serif;
+      font-size: 11px;
+      background: #1a1a1a;
+      color: #000;
+      overflow: hidden;
+    }
+
+    /* ── OUTER WINDOW CHROME ──────────────────────────────────────────────── */
+    #itunes-window {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      border: 1px solid #222;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.9);
+      overflow: hidden;
+    }
+
+    /* ── TITLE BAR ──────────────────────────────────────────────────────────── */
+    #title-bar {
+      background: linear-gradient(to bottom, #d8d8d8 0%, #b8b8b8 45%, #a8a8a8 46%, #c0c0c0 100%);
+      border-bottom: 1px solid #787878;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 6px;
+      flex-shrink: 0;
+      user-select: none;
+      position: relative;
+    }
+
+    .traffic-light {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; cursor: pointer; color: transparent;
+      flex-shrink: 0;
+    }
+    .traffic-light:hover { color: rgba(0,0,0,0.5); }
+    .tl-close  { background: radial-gradient(circle at 35% 35%, #ff7070, #cc0000); }
+    .tl-min    { background: radial-gradient(circle at 35% 35%, #ffdd70, #ccaa00); }
+    .tl-max    { background: radial-gradient(circle at 35% 35%, #70dd70, #00aa00); }
+    .tl-close:hover  { background: radial-gradient(circle at 35% 35%, #ff9090, #dd2020); }
+
+    #title-bar .win-title {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      font-size: 11px; font-weight: bold; color: #333;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+      white-space: nowrap;
+    }
+
+    /* ── TOP TRANSPORT BAR ──────────────────────────────────────────────────── */
+    #transport {
+      background: linear-gradient(to bottom,
+        #c8c8c8 0%, #b2b2b2 15%, #9e9e9e 16%,
+        #b4b4b4 50%, #a4a4a4 51%, #b8b8b8 100%);
+      border-bottom: 1px solid #686868;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      height: 60px;
+    }
+
+    /* Back/forward + Play/Pause buttons */
+    .transport-btn {
+      width: 28px; height: 28px;
+      background: var(--btn-chrome);
+      border: 1px solid #888;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.7);
+      font-size: 10px;
+      color: #333;
+      flex-shrink: 0;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .transport-btn:hover { background: linear-gradient(to bottom, #efefef 0%, #d4d4d4 50%, #c4c4c4 51%, #d8d8d8 100%); }
+    .transport-btn:active { box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+
+    .play-btn {
+      width: 36px; height: 36px;
+      font-size: 14px;
+    }
+
+    /* Volume */
+    #vol-low, #vol-high { font-size: 14px; color: #555; flex-shrink: 0; }
+    #vol-slider {
+      width: 70px;
+      accent-color: #888;
+      flex-shrink: 0;
+    }
+
+    /* Scrubber area (center) */
+    #scrubber-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    #track-info {
+      text-align: center;
+      line-height: 1.3;
+      min-width: 0;
+      width: 100%;
+    }
+    #track-name {
+      font-size: 12px; font-weight: bold; color: #111;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #track-sub {
+      font-size: 10px; color: #555;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    #scrubber-row {
+      display: flex; align-items: center; gap: 6px; width: 100%;
+    }
+    #time-elapsed, #time-remain {
+      font-size: 10px; color: #444; width: 34px; flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    #time-remain { text-align: right; }
+
+    #scrubber {
+      flex: 1;
+      height: 4px;
+      background: linear-gradient(to bottom, #888 0%, #bbb 100%);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      border: 1px solid #999;
+    }
+    #scrubber-fill {
+      height: 100%;
+      background: linear-gradient(to bottom, #5090e0, #2060c0);
+      border-radius: 2px;
+      width: 0%;
+      pointer-events: none;
+    }
+    #scrubber-thumb {
+      position: absolute; top: -4px;
+      width: 10px; height: 10px;
+      background: radial-gradient(circle at 35% 35%, #f0f0f0, #aaa);
+      border: 1px solid #777;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      pointer-events: none;
+      margin-left: -5px;
+      left: 0%;
+    }
+
+    /* Album art mini */
+    #art-mini {
+      width: 48px; height: 48px;
+      background: #444;
+      border: 1px solid #666;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+
+    /* Search box */
+    #search-box {
+      background: linear-gradient(to bottom, #a8a8a8, #c0c0c0);
+      border: 1px solid #888;
+      border-radius: 10px;
+      padding: 2px 8px 2px 22px;
+      font-size: 11px;
+      width: 140px;
+      flex-shrink: 0;
+      position: relative;
+      color: #222;
+      outline: none;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    }
+    #search-box::placeholder { color: #666; }
+    #search-box:focus { box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 0 0 2px rgba(80,130,220,0.5); }
+    .search-wrap { position: relative; flex-shrink: 0; }
+    .search-icon {
+      position: absolute; left: 7px; top: 50%; transform: translateY(-50%);
+      font-size: 11px; color: #555; pointer-events: none;
+    }
+
+    /* ── MIDDLE SPLIT ────────────────────────────────────────────────────────── */
+    #middle {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      border-top: 1px solid #aaa;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────────────────────── */
+    #sidebar {
+      width: 168px;
+      background: linear-gradient(to right, #3a3a3a, #404040);
+      border-right: 1px solid #252525;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex-shrink: 0;
+    }
+    #sidebar::-webkit-scrollbar { width: 8px; }
+    #sidebar::-webkit-scrollbar-track { background: #303030; }
+    #sidebar::-webkit-scrollbar-thumb { background: #606060; border-radius: 4px; }
+
+    .src-section-head {
+      padding: 10px 8px 3px;
+      font-size: 10px;
+      font-weight: bold;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .src-item {
+      padding: 4px 8px 4px 28px;
+      color: #ddd;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-radius: 3px;
+      margin: 1px 4px;
+    }
+    .src-item:hover { background: var(--sidebar-hover); }
+    .src-item.active {
+      background: linear-gradient(to bottom, #4a7fd4, #2d5eb8);
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 2px rgba(0,0,0,0.4);
+    }
+    .src-item .src-icon { font-size: 14px; flex-shrink: 0; }
+
+    .src-playlist-item {
+      padding-left: 36px;
+      font-size: 11px;
+    }
+
+    .sidebar-divider {
+      border: none;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #505050;
+      margin: 4px 0;
+    }
+
+    /* Album art panel (bottom of sidebar) */
+    #art-panel {
+      margin: 8px;
+      background: #222;
+      border: 1px solid #555;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN CONTENT ────────────────────────────────────────────────────────── */
+    #main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* Column headers */
+    #col-headers {
+      display: flex;
+      background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+      border-bottom: 1px solid #a0a0a0;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .col-head {
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #444;
+      border-right: 1px solid #b8b8b8;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+    }
+    .col-head:hover { background: rgba(255,255,255,0.4); }
+    .col-head.sorted { color: #0060cc; }
+    .col-head .sort-arrow { margin-left: 3px; font-size: 9px; }
+
+    /* Column widths */
+    .col-num    { width: 30px;  flex-shrink: 0; text-align: center; }
+    .col-title  { flex: 3; min-width: 140px; }
+    .col-time   { width: 44px;  flex-shrink: 0; text-align: right; }
+    .col-artist { flex: 2; min-width: 100px; }
+    .col-album  { flex: 2; min-width: 100px; }
+    .col-genre  { width: 80px;  flex-shrink: 0; }
+    .col-rating { width: 72px;  flex-shrink: 0; }
+
+    /* Song list */
+    #song-list {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #song-list::-webkit-scrollbar { width: 14px; }
+    #song-list::-webkit-scrollbar-track { background: #e8e8e8; }
+    #song-list::-webkit-scrollbar-thumb {
+      background: linear-gradient(to right, #c0c0c0, #a8a8a8);
+      border-radius: 7px;
+      border: 2px solid #e8e8e8;
+    }
+
+    .song-row {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .song-row:nth-child(even) { background: var(--table-even); }
+    .song-row:nth-child(odd)  { background: var(--table-odd); }
+    .song-row:hover:not(.selected):not(.playing) { background: #dce8ff; }
+    .song-row.selected {
+      background: linear-gradient(to bottom, #3c7fdb, #2968c8) !important;
+      color: #fff;
+    }
+    .song-row.playing .col-num { color: var(--playing-color); font-weight: bold; }
+    .song-row.selected .col-num { color: #fff; }
+    .song-row.playing:not(.selected) { background: #e8f0ff !important; }
+
+    .song-row .col-head, .song-row .col-num,
+    .song-row .col-title, .song-row .col-time,
+    .song-row .col-artist, .song-row .col-album,
+    .song-row .col-genre, .song-row .col-rating {
+      padding: 2px 6px;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-row.selected * { color: #fff !important; }
+
+    /* Star rating */
+    .stars { color: #aaa; font-size: 11px; letter-spacing: 1px; }
+    .song-row.selected .stars { color: rgba(255,255,255,0.7); }
+    .stars .lit { color: #0060cc; }
+    .song-row.selected .stars .lit { color: #fff; }
+
+    /* Playing indicator */
+    .now-playing-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--playing-color);
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(0,96,204,0.6);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    /* ── BOTTOM BAR ──────────────────────────────────────────────────────────── */
+    #bottom-bar {
+      background: linear-gradient(to bottom, #c4c4c4 0%, #acacac 100%);
+      border-top: 1px solid #888;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .bot-btn {
+      padding: 1px 8px;
+      background: var(--btn-chrome);
+      border: 1px solid #888;
+      border-radius: 3px;
+      font-size: 11px;
+      font-family: inherit;
+      cursor: pointer;
+      color: #333;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.7);
+      display: flex; align-items: center; gap: 3px;
+    }
+    .bot-btn:hover { background: linear-gradient(to bottom, #f0f0f0, #d4d4d4 50%, #c8c8c8 51%, #dcdcdc); }
+    .bot-btn:active { box-shadow: inset 0 2px 3px rgba(0,0,0,0.2); }
+    .bot-btn.active {
+      background: linear-gradient(to bottom, #a0b8e0 0%, #7098d0 50%, #6088c0 51%, #8098c8 100%);
+      color: #fff;
+    }
+
+    .bot-icon-btn {
+      width: 22px; height: 22px;
+      background: none; border: none;
+      cursor: pointer; font-size: 14px; color: #555;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 3px;
+    }
+    .bot-icon-btn:hover { background: rgba(0,0,0,0.1); }
+    .bot-icon-btn.active { color: #0060cc; }
+
+    #status-text {
+      flex: 1; text-align: center;
+      font-size: 11px; color: #444;
+    }
+
+    /* ── EQ BARS (visualizer) ──────────────────────────────────────────────── */
+    #eq-bars {
+      display: flex; align-items: flex-end; gap: 1px; height: 16px; flex-shrink: 0;
+    }
+    .eq-bar {
+      width: 3px;
+      background: linear-gradient(to top, #0060cc, #66aaff);
+      border-radius: 1px 1px 0 0;
+      height: 4px;
+      transition: height 0.1s;
+    }
+
+    /* ── SCROLLBAR (main content) ──────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 14px; }
+    ::-webkit-scrollbar-track { background: #e0e0e0; }
+    ::-webkit-scrollbar-thumb { background: #b0b0b0; border-radius: 7px; border: 2px solid #e0e0e0; }
+    ::-webkit-scrollbar-thumb:hover { background: #989898; }
+  </style>
+</head>
+<body>
+<div id="itunes-window">
+
+  <!-- ── TITLE BAR ─────────────────────────────────────── -->
+  <div id="title-bar">
+    <div class="traffic-light tl-close" onclick="window.location='index.html'" title="Close">✕</div>
+    <div class="traffic-light tl-min" title="Minimize">−</div>
+    <div class="traffic-light tl-max" title="Zoom">+</div>
+    <div class="win-title">iTunes</div>
+  </div>
+
+  <!-- ── TRANSPORT BAR ─────────────────────────────────── -->
+  <div id="transport">
+    <!-- Prev / Play / Next -->
+    <button class="transport-btn" onclick="prevTrack()" title="Previous">⏮</button>
+    <button class="transport-btn play-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause">▶</button>
+    <button class="transport-btn" onclick="nextTrack()" title="Next">⏭</button>
+
+    <!-- Volume -->
+    <span id="vol-low">🔈</span>
+    <input type="range" id="vol-slider" min="0" max="100" value="75" oninput="setVolume(this.value)" />
+    <span id="vol-high">🔊</span>
+
+    <!-- Scrubber + track info -->
+    <div id="scrubber-area">
+      <div id="track-info">
+        <div id="track-name">Not Playing</div>
+        <div id="track-sub">Select a song to begin</div>
+      </div>
+      <div id="scrubber-row">
+        <span id="time-elapsed">0:00</span>
+        <div id="scrubber" onclick="seekTo(event)">
+          <div id="scrubber-fill"></div>
+          <div id="scrubber-thumb"></div>
+        </div>
+        <span id="time-remain">0:00</span>
+      </div>
+    </div>
+
+    <!-- Album art mini -->
+    <div id="art-mini" title="Show/hide artwork">🎵</div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-box" placeholder="Search" oninput="filterSongs(this.value)" />
+    </div>
+  </div>
+
+  <!-- ── MIDDLE ─────────────────────────────────────────── -->
+  <div id="middle">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <div id="sidebar">
+      <div class="src-section-head">Library</div>
+      <div class="src-item active" onclick="switchSource(this,'music')" id="src-music">
+        <span class="src-icon">🎵</span> Music
+      </div>
+      <div class="src-item" onclick="switchSource(this,'movies')">
+        <span class="src-icon">🎬</span> Movies
+      </div>
+      <div class="src-item" onclick="switchSource(this,'tv')">
+        <span class="src-icon">📺</span> TV Shows
+      </div>
+      <div class="src-item" onclick="switchSource(this,'podcasts')">
+        <span class="src-icon">🎙️</span> Podcasts
+      </div>
+      <div class="src-item" onclick="switchSource(this,'radio')">
+        <span class="src-icon">📻</span> Radio
+      </div>
+
+      <hr class="sidebar-divider" />
+
+      <div class="src-section-head">Store</div>
+      <div class="src-item" onclick="switchSource(this,'store')">
+        <span class="src-icon">🛒</span> iTunes Store
+      </div>
+      <div class="src-item" onclick="switchSource(this,'purchased')">
+        <span class="src-icon">✅</span> Purchased
+      </div>
+
+      <hr class="sidebar-divider" />
+
+      <div class="src-section-head">Playlists</div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'partyshuffle')">
+        <span class="src-icon">🔀</span> Party Shuffle
+      </div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'pl1')">
+        <span class="src-icon">🎶</span> 00s Hits
+      </div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'pl2')">
+        <span class="src-icon">🎶</span> Workout Mix
+      </div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'pl3')">
+        <span class="src-icon">🎶</span> Late Night Chill
+      </div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'pl4')">
+        <span class="src-icon">🎶</span> Road Trip 2003
+      </div>
+      <div class="src-item src-playlist-item" onclick="switchSource(this,'pl5')">
+        <span class="src-icon">🎶</span> Top Rated
+      </div>
+
+      <hr class="sidebar-divider" />
+
+      <div class="src-section-head">My Website</div>
+      <a href="index.html" class="src-item" style="text-decoration:none;">
+        <span class="src-icon">🏠</span> Home
+      </a>
+      <a href="about.html" class="src-item" style="text-decoration:none;">
+        <span class="src-icon">👤</span> About Me
+      </a>
+      <a href="gallery.html" class="src-item" style="text-decoration:none;">
+        <span class="src-icon">📸</span> Photo Gallery
+      </a>
+      <a href="guestbook.html" class="src-item" style="text-decoration:none;">
+        <span class="src-icon">📖</span> Guestbook
+      </a>
+
+      <hr class="sidebar-divider" />
+
+      <!-- Album art panel -->
+      <div id="art-panel">🎵</div>
+    </div>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────────── -->
+    <div id="main-content">
+
+      <!-- Column headers -->
+      <div id="col-headers">
+        <div class="col-head col-num"  onclick="sortBy('num')">#</div>
+        <div class="col-head col-title" onclick="sortBy('title')">Song <span class="sort-arrow" id="sort-title">▲</span></div>
+        <div class="col-head col-time"  onclick="sortBy('time')">Time</div>
+        <div class="col-head col-artist" onclick="sortBy('artist')">Artist</div>
+        <div class="col-head col-album"  onclick="sortBy('album')">Album</div>
+        <div class="col-head col-genre"  onclick="sortBy('genre')">Genre</div>
+        <div class="col-head col-rating" onclick="sortBy('rating')">Rating</div>
+      </div>
+
+      <!-- Song rows -->
+      <div id="song-list"></div>
+
+    </div>
+  </div>
+
+  <!-- ── BOTTOM BAR ─────────────────────────────────────── -->
+  <div id="bottom-bar">
+    <!-- Left controls -->
+    <button class="bot-icon-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">🔀</button>
+    <button class="bot-icon-btn" id="repeat-btn"  onclick="toggleRepeat()"  title="Repeat">🔁</button>
+
+    <div id="eq-bars">
+      <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      <div class="eq-bar"></div><div class="eq-bar"></div>
+    </div>
+
+    <!-- Status -->
+    <div id="status-text">— songs</div>
+
+    <!-- Right controls -->
+    <button class="bot-btn" onclick="window.location='index.html'">🪟 Back to Desktop</button>
+    <button class="bot-btn" id="browse-btn" onclick="toggleBrowse()">⊞ Browse</button>
+    <button class="bot-btn">🔥 Burn Disc</button>
+
+    <!-- Add playlist -->
+    <button class="bot-icon-btn" title="Add playlist">＋</button>
+  </div>
+
+</div><!-- end #itunes-window -->
+
+<!-- Hidden audio -->
+<audio id="player" preload="auto"></audio>
+
+<script>
+// ── LIBRARY DATA ──────────────────────────────────────────────────────────────
+const library = [
+  { id:1,  title:'In The End',             artist:'Linkin Park',       album:'Hybrid Theory',         genre:'Rock',     dur:'3:36', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { id:2,  title:'Bring Me To Life',       artist:'Evanescence',       album:'Fallen',                genre:'Rock',     dur:'3:57', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { id:3,  title:'The Anthem',             artist:'Good Charlotte',    album:'The Young & The Hopeless', genre:'Pop Punk', dur:'3:09', rating:4, icon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+  { id:4,  title:'Complicated',            artist:'Avril Lavigne',     album:'Let Go',                genre:'Pop',      dur:'4:04', rating:4, icon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+  { id:5,  title:'How You Remind Me',      artist:'Nickelback',        album:'Silver Side Up',        genre:'Rock',     dur:'3:43', rating:4, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+  { id:6,  title:'Somewhere I Belong',     artist:'Linkin Park',       album:'Meteora',               genre:'Rock',     dur:'3:33', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
+  { id:7,  title:'Beautiful',              artist:'Christina Aguilera',album:'Stripped',              genre:'Pop',      dur:'3:58', rating:3, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+  { id:8,  title:'Sk8er Boi',              artist:'Avril Lavigne',     album:'Let Go',                genre:'Pop',      dur:'3:24', rating:4, icon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' },
+  { id:9,  title:'Fighter',               artist:'Christina Aguilera',album:'Stripped',              genre:'Pop',      dur:'4:03', rating:4, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3' },
+  { id:10, title:'In Da Club',             artist:'50 Cent',           album:'Get Rich or Die Tryin\'', genre:'Hip-Hop', dur:'3:13', rating:4, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3' },
+  { id:11, title:'Lose Yourself',          artist:'Eminem',            album:'8 Mile Soundtrack',     genre:'Hip-Hop',  dur:'5:26', rating:5, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3' },
+  { id:12, title:"Don't Know Why",         artist:'Norah Jones',       album:'Come Away With Me',     genre:'Jazz',     dur:'3:07', rating:4, icon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3' },
+  { id:13, title:'Clocks',                 artist:'Coldplay',          album:'A Rush of Blood to the Head', genre:'Alternative', dur:'5:07', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3' },
+  { id:14, title:'The Scientist',          artist:'Coldplay',          album:'A Rush of Blood to the Head', genre:'Alternative', dur:'5:09', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3' },
+  { id:15, title:'Seven Nation Army',      artist:'The White Stripes', album:'Elephant',              genre:'Rock',     dur:'3:51', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3' },
+  { id:16, title:'Crazy in Love',          artist:'Beyoncé',           album:'Dangerously in Love',   genre:'R&B',      dur:'3:56', rating:4, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3' },
+  { id:17, title:'Yeah!',                  artist:'Usher ft. Lil Jon', album:'Confessions',           genre:'R&B',      dur:'4:11', rating:4, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { id:18, title:'Hey Ya!',                artist:'OutKast',           album:'Speakerboxxx/The Love Below', genre:'Hip-Hop', dur:'3:55', rating:5, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { id:19, title:'Maps',                   artist:'Yeah Yeah Yeahs',   album:'Fever to Tell',         genre:'Indie',    dur:'3:40', rating:4, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+  { id:20, title:'Take Me Out',            artist:'Franz Ferdinand',   album:'Franz Ferdinand',        genre:'Indie',    dur:'3:57', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+  { id:21, title:'Mr. Brightside',         artist:'The Killers',       album:'Hot Fuss',              genre:'Indie',    dur:'3:42', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+  { id:22, title:'Are You Gonna Be My Girl', artist:'Jet',             album:'Get Born',              genre:'Rock',     dur:'3:33', rating:4, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
+  { id:23, title:'Stacy\'s Mom',           artist:'Fountains of Wayne',album:'Welcome Interstate Managers', genre:'Pop', dur:'3:17', rating:4, icon:'🎵', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+  { id:24, title:'Since U Been Gone',      artist:'Kelly Clarkson',    album:'Breakaway',             genre:'Pop',      dur:'3:09', rating:4, icon:'🎤', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' },
+  { id:25, title:'Numb',                   artist:'Linkin Park',       album:'Meteora',               genre:'Rock',     dur:'3:05', rating:5, icon:'🎸', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const audio = document.getElementById('player');
+let currentIndex  = -1;   // index in filteredSongs
+let isPlaying     = false;
+let isShuffle     = false;
+let isRepeat      = false;
+let sortCol       = 'num';
+let sortAsc       = true;
+let searchQuery   = '';
+let filteredSongs = [...library];
+let eqInterval    = null;
+let selectedId    = -1;
+
+// ── RENDER SONGS ─────────────────────────────────────────────────────────────
+function renderSongs() {
+  const list = document.getElementById('song-list');
+  list.innerHTML = '';
+  if (filteredSongs.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">No songs found</div>';
+    return;
+  }
+  filteredSongs.forEach((s, i) => {
+    const row = document.createElement('div');
+    const isCurrentPlaying = currentIndex === i && isPlaying;
+    const isSelected = s.id === selectedId;
+    row.className = 'song-row' +
+      (isCurrentPlaying || currentIndex === i ? ' playing' : '') +
+      (isSelected ? ' selected' : '');
+    row.dataset.id = s.id;
+
+    const numCell = isCurrentPlaying
+      ? '<span class="now-playing-dot"></span>'
+      : (i + 1);
+
+    row.innerHTML = `
+      <div class="col-num">${numCell}</div>
+      <div class="col-title">${s.title}</div>
+      <div class="col-time">${s.dur}</div>
+      <div class="col-artist">${s.artist}</div>
+      <div class="col-album">${s.album}</div>
+      <div class="col-genre">${s.genre}</div>
+      <div class="col-rating"><span class="stars">${renderStars(s.rating)}</span></div>
+    `;
+
+    row.ondblclick = () => playSong(i);
+    row.onclick    = () => selectSong(i);
+    list.appendChild(row);
+  });
+  updateStatus();
+}
+
+function renderStars(n) {
+  return [1,2,3,4,5].map(i =>
+    `<span class="${i <= n ? 'lit' : ''}">★</span>`
+  ).join('');
+}
+
+function selectSong(i) {
+  selectedId = filteredSongs[i].id;
+  renderSongs();
+}
+
+// ── PLAYBACK ──────────────────────────────────────────────────────────────────
+function playSong(i) {
+  if (i < 0 || i >= filteredSongs.length) return;
+  currentIndex = i;
+  selectedId   = filteredSongs[i].id;
+  const s = filteredSongs[i];
+
+  audio.src = s.src;
+  audio.volume = document.getElementById('vol-slider').value / 100;
+  audio.play().catch(() => {});
+  isPlaying = true;
+
+  document.getElementById('playBtn').textContent = '⏸';
+  document.getElementById('track-name').textContent = s.title;
+  document.getElementById('track-sub').textContent  = s.artist + ' — ' + s.album;
+  document.getElementById('art-mini').textContent   = s.icon;
+  document.getElementById('art-panel').textContent  = s.icon;
+
+  startEq();
+  renderSongs();
+}
+
+function togglePlay() {
+  if (currentIndex < 0) { playSong(0); return; }
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    stopEq();
+  } else {
+    audio.play().catch(() => {});
+    isPlaying = true;
+    document.getElementById('playBtn').textContent = '⏸';
+    startEq();
+  }
+  renderSongs();
+}
+
+function nextTrack() {
+  if (filteredSongs.length === 0) return;
+  let next;
+  if (isShuffle) {
+    next = Math.floor(Math.random() * filteredSongs.length);
+  } else {
+    next = (currentIndex + 1) % filteredSongs.length;
+    if (!isRepeat && next === 0 && currentIndex === filteredSongs.length - 1) {
+      audio.pause(); isPlaying = false;
+      document.getElementById('playBtn').textContent = '▶';
+      stopEq(); return;
+    }
+  }
+  playSong(next);
+}
+
+function prevTrack() {
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  const prev = (currentIndex - 1 + filteredSongs.length) % filteredSongs.length;
+  playSong(prev);
+}
+
+function setVolume(v) {
+  audio.volume = v / 100;
+}
+
+// ── SCRUBBER ──────────────────────────────────────────────────────────────────
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct  = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('scrubber-fill').style.width  = pct + '%';
+  document.getElementById('scrubber-thumb').style.left  = pct + '%';
+  document.getElementById('time-elapsed').textContent   = fmt(audio.currentTime);
+  document.getElementById('time-remain').textContent    = '-' + fmt(audio.duration - audio.currentTime);
+});
+
+audio.addEventListener('ended', () => {
+  if (isRepeat) { audio.currentTime = 0; audio.play(); }
+  else nextTrack();
+});
+
+function seekTo(e) {
+  const bar = document.getElementById('scrubber');
+  const ratio = Math.max(0, Math.min(1, e.offsetX / bar.offsetWidth));
+  if (audio.duration) audio.currentTime = ratio * audio.duration;
+}
+
+function fmt(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+// ── SORT ──────────────────────────────────────────────────────────────────────
+function sortBy(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = true; }
+
+  // Clear all sort arrows
+  document.querySelectorAll('.sort-arrow').forEach(el => el.remove());
+
+  const map = { num:'id', title:'title', time:'dur', artist:'artist', album:'album', genre:'genre', rating:'rating' };
+  const key = map[col] || 'id';
+  filteredSongs.sort((a, b) => {
+    let av = a[key], bv = b[key];
+    if (typeof av === 'string') av = av.toLowerCase(), bv = bv.toLowerCase();
+    return sortAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+  });
+
+  const headMap = { num:'col-num', title:'col-title', time:'col-time', artist:'col-artist', album:'col-album', genre:'col-genre', rating:'col-rating' };
+  const heads = document.getElementById('col-headers').children;
+  [...heads].forEach(h => {
+    if (h.classList.contains(headMap[col])) {
+      const sp = document.createElement('span');
+      sp.className = 'sort-arrow';
+      sp.textContent = sortAsc ? ' ▲' : ' ▼';
+      h.appendChild(sp);
+      h.classList.add('sorted');
+    } else h.classList.remove('sorted');
+  });
+
+  renderSongs();
+}
+
+// ── SEARCH / FILTER ───────────────────────────────────────────────────────────
+function filterSongs(q) {
+  searchQuery = q.toLowerCase();
+  filteredSongs = library.filter(s =>
+    s.title.toLowerCase().includes(searchQuery) ||
+    s.artist.toLowerCase().includes(searchQuery) ||
+    s.album.toLowerCase().includes(searchQuery) ||
+    s.genre.toLowerCase().includes(searchQuery)
+  );
+  currentIndex = -1;
+  renderSongs();
+}
+
+// ── SHUFFLE / REPEAT ──────────────────────────────────────────────────────────
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffle-btn').classList.toggle('active', isShuffle);
+}
+function toggleRepeat() {
+  isRepeat = !isRepeat;
+  document.getElementById('repeat-btn').classList.toggle('active', isRepeat);
+}
+
+// ── SOURCE SWITCHER ───────────────────────────────────────────────────────────
+function switchSource(el, key) {
+  document.querySelectorAll('.src-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  if (key === 'music') {
+    filteredSongs = [...library];
+    renderSongs();
+  } else if (key === 'pl1') {
+    filteredSongs = library.filter(s => ['Rock','Pop Punk','Alternative','Indie'].includes(s.genre));
+    renderSongs();
+  } else if (key === 'pl2') {
+    filteredSongs = library.filter(s => s.rating >= 4);
+    renderSongs();
+  } else if (key === 'pl3') {
+    filteredSongs = library.filter(s => ['Jazz','Alternative','Indie'].includes(s.genre));
+    renderSongs();
+  } else if (key === 'pl4') {
+    filteredSongs = library.filter(s => [1,3,5,10,11,13,15,18,21].includes(s.id));
+    renderSongs();
+  } else if (key === 'pl5') {
+    filteredSongs = library.filter(s => s.rating === 5);
+    renderSongs();
+  } else if (key === 'partyshuffle') {
+    filteredSongs = [...library].sort(() => Math.random() - 0.5);
+    renderSongs();
+  } else {
+    const names = { movies:'Movies', tv:'TV Shows', podcasts:'Podcasts', radio:'Radio', store:'iTunes Store', purchased:'Purchased' };
+    document.getElementById('song-list').innerHTML =
+      `<div style="padding:40px;text-align:center;color:#888;font-size:13px;">
+        <div style="font-size:48px;margin-bottom:12px;">🎵</div>
+        ${names[key] || key} is empty.
+      </div>`;
+    document.getElementById('status-text').textContent = '— items';
+  }
+}
+
+// ── EQ VISUALIZER ─────────────────────────────────────────────────────────────
+function startEq() {
+  if (eqInterval) return;
+  eqInterval = setInterval(() => {
+    document.querySelectorAll('.eq-bar').forEach(b => {
+      b.style.height = (Math.random() * 13 + 3) + 'px';
+    });
+  }, 110);
+}
+function stopEq() {
+  clearInterval(eqInterval); eqInterval = null;
+  document.querySelectorAll('.eq-bar').forEach(b => b.style.height = '3px');
+}
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function updateStatus() {
+  const count = filteredSongs.length;
+  const totalMin = filteredSongs.reduce((acc, s) => {
+    const [m, sec] = s.dur.split(':').map(Number);
+    return acc + m * 60 + sec;
+  }, 0);
+  const h = Math.floor(totalMin / 3600);
+  const m = Math.floor((totalMin % 3600) / 60);
+  const timeStr = h > 0 ? `${h}:${String(m).padStart(2,'0')} hours` : `${m} minutes`;
+  document.getElementById('status-text').textContent =
+    `${count} song${count !== 1 ? 's' : ''}, ${timeStr}`;
+}
+
+// ── BROWSE TOGGLE (simple) ────────────────────────────────────────────────────
+function toggleBrowse() {
+  document.getElementById('browse-btn').classList.toggle('active');
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); nextTrack(); }
+  if (e.code === 'ArrowLeft')  { e.preventDefault(); prevTrack(); }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderSongs();
+</script>
+</body>
+</html>

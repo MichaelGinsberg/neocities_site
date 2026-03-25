@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Monitor body -->
+  <rect x="3" y="2" width="26" height="19" rx="2" fill="#bcc8dc"/>
+  <rect x="3" y="2" width="26" height="5" rx="2" fill="#d0dcf0"/>
+  <!-- Screen: Bliss sky -->
+  <rect x="5" y="4" width="22" height="13" fill="#50a0f0"/>
+  <!-- Screen: Bliss hills -->
+  <rect x="5" y="10" width="22" height="7" fill="#3a9040"/>
+  <ellipse cx="16" cy="10.5" rx="13" ry="4.5" fill="#60c060"/>
+  <!-- Sky highlight -->
+  <rect x="5" y="4" width="22" height="6" fill="#80c0ff" opacity="0.45"/>
+  <!-- Screen border -->
+  <rect x="5" y="4" width="22" height="13" fill="none" stroke="#2050a0" stroke-width="0.5"/>
+  <!-- Monitor chin -->
+  <rect x="3" y="16" width="26" height="5" rx="1" fill="#a8b8cc"/>
+  <!-- Power LED -->
+  <circle cx="16" cy="19" r="1.2" fill="#00cc00"/>
+  <!-- Neck -->
+  <rect x="13" y="22" width="6" height="3" fill="#98aabc"/>
+  <!-- Base -->
+  <rect x="9" y="25" width="14" height="3" rx="2" fill="#98aabc"/>
+  <rect x="9" y="25" width="14" height="1.2" rx="1" fill="#c0d0e4" opacity="0.5"/>
+</svg>

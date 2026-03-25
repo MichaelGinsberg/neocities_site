@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Gallery — My Windows XP Website</title>
+  <link rel="stylesheet" href="xp-theme.css" />
+  <style>
+    /* ---- GALLERY-SPECIFIC STYLES ---- */
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 6px;
+      padding: 6px;
+      background: #fff;
+    }
+
+    .photo-thumb {
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: var(--xp-gray);
+      cursor: pointer;
+      text-align: center;
+      padding: 4px;
+      transition: outline 0.05s;
+    }
+    .photo-thumb:hover { outline: 2px solid var(--xp-blue-mid); }
+    .photo-thumb.selected {
+      outline: 2px solid var(--xp-blue);
+      background: #dce8ff;
+    }
+
+    .photo-thumb .thumb-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      background: var(--xp-gray);
+      border: 1px inset #848484;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Colorful placeholder gradients per photo */
+    .thumb-img.c1 { background: linear-gradient(135deg, #87ceeb, #4682b4); }
+    .thumb-img.c2 { background: linear-gradient(135deg, #90ee90, #228b22); }
+    .thumb-img.c3 { background: linear-gradient(135deg, #ffb347, #d2691e); }
+    .thumb-img.c4 { background: linear-gradient(135deg, #dda0dd, #8b008b); }
+    .thumb-img.c5 { background: linear-gradient(135deg, #f08080, #8b0000); }
+    .thumb-img.c6 { background: linear-gradient(135deg, #ffe4b5, #ffa500); }
+    .thumb-img.c7 { background: linear-gradient(135deg, #b0e0e6, #20b2aa); }
+    .thumb-img.c8 { background: linear-gradient(135deg, #f0e68c, #daa520); }
+    .thumb-img.c9 { background: linear-gradient(135deg, #c0c0c0, #808080); }
+    .thumb-img.c10{ background: linear-gradient(135deg, #ffc0cb, #ff69b4); }
+    .thumb-img.c11{ background: linear-gradient(135deg, #e0ffff, #00ced1); }
+    .thumb-img.c12{ background: linear-gradient(135deg, #98fb98, #3cb371); }
+
+    .photo-thumb .thumb-caption {
+      font-size: 10px;
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #000;
+    }
+
+    /* ---- VIEWER PANEL ---- */
+    .viewer-panel {
+      background: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+      padding: 16px;
+      border-bottom: 2px solid #848484;
+      position: relative;
+    }
+
+    .viewer-img {
+      width: 320px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      border: 3px solid #444;
+      box-shadow: 0 0 24px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .viewer-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .viewer-btn {
+      padding: 3px 12px;
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      background: linear-gradient(to bottom, #dfe0e0 0%, #bbbcbc 100%);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      cursor: pointer;
+      color: #fff;
+      text-shadow: 0 1px 1px #000;
+    }
+    .viewer-btn:hover { background: linear-gradient(to bottom, #eff0f0 0%, #cfcfcf 100%); }
+
+    .viewer-info {
+      color: #aaa;
+      font-size: 10px;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* ---- FILMSTRIP ---- */
+    .filmstrip {
+      background: #111;
+      border-top: 2px solid #444;
+      padding: 6px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      height: 72px;
+      align-items: center;
+    }
+    .filmstrip::-webkit-scrollbar { height: 8px; }
+    .filmstrip::-webkit-scrollbar-track { background: #222; }
+    .filmstrip::-webkit-scrollbar-thumb { background: #555; }
+
+    .film-frame {
+      width: 80px;
+      height: 58px;
+      flex-shrink: 0;
+      border: 2px solid #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .film-frame:hover { border-color: #fff; }
+    .film-frame.active { border-color: var(--xp-blue-light); box-shadow: 0 0 6px var(--xp-blue-light); }
+
+    /* ---- ALBUM TABS ---- */
+    .album-tabs {
+      display: flex;
+      background: var(--xp-gray);
+      border-bottom: 2px solid #848484;
+      padding: 4px 4px 0;
+      gap: 2px;
+    }
+    .album-tab {
+      padding: 3px 12px;
+      background: #d4d0c8;
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      border-bottom: none;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      margin-bottom: -2px;
+    }
+    .album-tab.active {
+      background: #fff;
+      border-bottom: 2px solid #fff;
+      font-weight: bold;
+      color: var(--xp-blue);
+      padding-bottom: 5px;
+    }
+    .album-tab:hover:not(.active) { background: #e4e0d8; }
+
+    /* ---- DETAILS PANE ---- */
+    .details-pane {
+      background: var(--xp-gray);
+      border-top: 1px solid #848484;
+      padding: 6px 8px;
+      font-size: 11px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px 16px;
+    }
+    .detail-item { display: flex; gap: 4px; }
+    .detail-label { color: #555; white-space: nowrap; }
+    .detail-val { font-weight: bold; }
+
+    /* ---- SLIDESHOW OVERLAY ---- */
+    .slideshow-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 8000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .slideshow-overlay.active { display: flex; }
+
+    .slideshow-window {
+      background: var(--xp-gray);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      outline: 1px solid var(--xp-blue);
+      box-shadow: 4px 4px 24px rgba(0,0,0,0.8);
+      width: 560px;
+    }
+
+    .slideshow-frame {
+      width: 100%;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 120px;
+      position: relative;
+    }
+
+    .slideshow-nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px;
+      background: #1a1a1a;
+    }
+
+    .ss-counter {
+      color: #ccc;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== DESKTOP ICONS ========== -->
+<div class="desktop">
+  <a href="index.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/home.svg" width="32" height="32" alt=""/></div>
+    <span>Home</span>
+  </a>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/camera.svg" width="32" height="32" alt=""/></div>
+    <span>Gallery</span>
+  </div>
+  <a href="guestbook.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/book.svg" width="32" height="32" alt=""/></div>
+    <span>Guestbook</span>
+  </a>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/bin.svg" width="32" height="32" alt=""/></div>
+    <span>Recycle Bin</span>
+  </div>
+</div>
+
+<!-- ========== DESKTOP CONTENT ========== -->
+<div class="desktop-content">
+
+  <!-- MAIN GALLERY WINDOW -->
+  <div class="window" style="width:760px;">
+    <div class="window-titlebar">
+      <span class="icon">📸</span>
+      <span class="title">My Photo Gallery — Windows Picture and Fax Viewer</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close" onclick="window.location='index.html'">✕</div>
+      </div>
+    </div>
+    <div class="window-menu">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Image</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="window-toolbar">
+      <button class="toolbar-btn">⬅ Back</button>
+      <button class="toolbar-btn">⬆ Up</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">📋 Views ▾</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" onclick="document.getElementById('slideshow').classList.add('active')">▶ Slideshow</button>
+      <button class="toolbar-btn">🖨️ Print</button>
+      <button class="toolbar-btn">📧 E-mail</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">🔍+ Zoom In</button>
+      <button class="toolbar-btn">🔍− Zoom Out</button>
+      <button class="toolbar-btn">↺ Rotate L</button>
+      <button class="toolbar-btn">↻ Rotate R</button>
+    </div>
+
+    <!-- Album Tabs -->
+    <div class="album-tabs">
+      <div class="album-tab active" onclick="switchAlbum(this,'vacation')">🏖️ Vacation 2002</div>
+      <div class="album-tab" onclick="switchAlbum(this,'family')">👨‍👩‍👧 Family</div>
+      <div class="album-tab" onclick="switchAlbum(this,'pets')">🐶 Pets</div>
+      <div class="album-tab" onclick="switchAlbum(this,'school')">🎓 School</div>
+    </div>
+
+    <div class="window-body" style="flex-direction:column;">
+
+      <!-- Viewer -->
+      <div class="viewer-panel" id="viewerPanel">
+        <div class="viewer-img" id="viewerImg" style="background: linear-gradient(135deg, #87ceeb, #4682b4);">
+          🏖️
+        </div>
+        <div class="viewer-controls">
+          <button class="viewer-btn" onclick="prevPhoto()">⏮ First</button>
+          <button class="viewer-btn" onclick="prevPhoto()">◀ Prev</button>
+          <button class="viewer-btn" onclick="nextPhoto()">Next ▶</button>
+          <button class="viewer-btn" onclick="nextPhoto()">Last ⏭</button>
+          <div style="width:1px; height:20px; background:#444; margin:0 4px;"></div>
+          <button class="viewer-btn" onclick="document.getElementById('slideshow').classList.add('active')">▶ Slideshow</button>
+        </div>
+        <div class="viewer-info" id="viewerInfo">Beach Sunset.jpg &nbsp;|&nbsp; 1/12 &nbsp;|&nbsp; 2048 × 1536 &nbsp;|&nbsp; JPEG &nbsp;|&nbsp; 1.4 MB</div>
+      </div>
+
+      <!-- Filmstrip -->
+      <div class="filmstrip" id="filmstrip"></div>
+
+      <!-- Grid / Sidebar layout -->
+      <div style="display:flex; flex:1; overflow:hidden;">
+        <!-- Sidebar -->
+        <div class="window-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-heading">Picture Tasks</div>
+            <a class="sidebar-link" href="#"><span class="sicon">👁️</span> View as slideshow</a>
+            <a class="sidebar-link" href="#"><span class="sicon">🖨️</span> Print pictures</a>
+            <a class="sidebar-link" href="#"><span class="sicon">📧</span> Email pictures</a>
+            <a class="sidebar-link" href="#"><span class="sicon">💾</span> Order prints</a>
+          </div>
+          <div class="sidebar-section" style="margin-top:4px;">
+            <div class="sidebar-heading">File &amp; Folder Tasks</div>
+            <a class="sidebar-link" href="#"><img class="sicon" src="icons/folder.svg" width="16" height="16" alt=""/> New album</a>
+            <a class="sidebar-link" href="#"><span class="sicon">📤</span> Upload photos</a>
+            <a class="sidebar-link" href="#"><img class="sicon" src="icons/bin.svg" width="16" height="16" alt=""/> Delete photos</a>
+          </div>
+          <div class="sidebar-section" style="margin-top:4px;">
+            <div class="sidebar-heading">Other Places</div>
+            <a class="sidebar-link" href="index.html"><img class="sicon" src="icons/home.svg" width="16" height="16" alt=""/> My Homepage</a>
+            <a class="sidebar-link" href="about.html"><img class="sicon" src="icons/person.svg" width="16" height="16" alt=""/> About Me</a>
+            <a class="sidebar-link" href="music.html"><img class="sicon" src="icons/music.svg" width="16" height="16" alt=""/> My Music</a>
+            <a class="sidebar-link" href="guestbook.html"><img class="sicon" src="icons/book.svg" width="16" height="16" alt=""/> Guestbook</a>
+          </div>
+          <div class="sidebar-section" style="margin-top:4px;">
+            <div class="sidebar-heading">Details</div>
+            <div style="padding:6px 10px; font-size:10px; color:#dce8ff; line-height:1.7;">
+              <div id="sidebarAlbumName" class="bold" style="color:#fff;">Vacation 2002</div>
+              <div>12 photos</div>
+              <div>Date: Aug 2002</div>
+              <div>Size: 18.4 MB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo grid -->
+        <div class="window-content" style="background:#f0f0f0; padding:4px;">
+          <div class="photo-grid" id="photoGrid"></div>
+        </div>
+      </div>
+
+      <!-- Details bar -->
+      <div class="details-pane">
+        <div class="detail-item"><span class="detail-label">File:</span><span class="detail-val" id="detailFile">Beach Sunset.jpg</span></div>
+        <div class="detail-item"><span class="detail-label">Size:</span><span class="detail-val" id="detailSize">1.4 MB</span></div>
+        <div class="detail-item"><span class="detail-label">Dims:</span><span class="detail-val" id="detailDims">2048 × 1536</span></div>
+        <div class="detail-item"><span class="detail-label">Type:</span><span class="detail-val">JPEG</span></div>
+        <div class="detail-item"><span class="detail-label">Taken:</span><span class="detail-val" id="detailDate">08/14/2002</span></div>
+        <div class="detail-item"><span class="detail-label">Rating:</span><span class="detail-val" id="detailRating">⭐⭐⭐⭐⭐</span></div>
+      </div>
+    </div>
+
+    <div class="window-statusbar">
+      <div class="statusbar-panel" id="statusText">12 objects — Vacation 2002</div>
+      <div class="statusbar-panel" style="flex:0 0 120px;">18.4 MB</div>
+    </div>
+  </div>
+
+  <!-- SMALL ALBUM INFO WINDOW -->
+  <div class="window" style="width:220px; align-self:flex-start;">
+    <div class="window-titlebar">
+      <span class="icon">📁</span>
+      <span class="title">My Albums</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="window-content" style="padding:0;">
+      <table class="xp-table">
+        <thead><tr><th>Album</th><th>#</th></tr></thead>
+        <tbody>
+          <tr><td>🏖️ Vacation 2002</td><td>12</td></tr>
+          <tr><td>👨‍👩‍👧 Family</td><td>28</td></tr>
+          <tr><td>🐶 Pets</td><td>15</td></tr>
+          <tr><td>🎓 School</td><td>9</td></tr>
+          <tr><td>🎄 Christmas</td><td>22</td></tr>
+          <tr><td>🎂 Birthday</td><td>17</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="window-statusbar">
+      <div class="statusbar-panel">6 albums — 103 photos</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== SLIDESHOW OVERLAY ========== -->
+<div class="slideshow-overlay" id="slideshow">
+  <div class="slideshow-window">
+    <div class="window-titlebar">
+      <span class="icon">▶</span>
+      <span class="title">Slideshow — Vacation 2002</span>
+      <div class="win-btns">
+        <div class="win-btn close" onclick="document.getElementById('slideshow').classList.remove('active')">✕</div>
+      </div>
+    </div>
+    <div class="slideshow-frame" id="slideshowFrame" style="background: linear-gradient(135deg, #87ceeb, #4682b4);">🏖️</div>
+    <div class="slideshow-nav">
+      <button class="xp-btn" onclick="ssPrev()">◀ Prev</button>
+      <span class="ss-counter" id="ssCounter">1 / 12</span>
+      <button class="xp-btn" onclick="ssNext()">Next ▶</button>
+      <button class="xp-btn primary" id="ssPlayBtn" onclick="toggleSlideshow()">⏸ Pause</button>
+      <button class="xp-btn" onclick="document.getElementById('slideshow').classList.remove('active')">✕ Close</button>
+    </div>
+    <div class="details-pane" style="background:#1a1a1a; color:#aaa; border-top:1px solid #333;">
+      <div class="detail-item"><span class="detail-label" style="color:#666;">File:</span><span class="detail-val" style="color:#ddd;" id="ssFile">Beach Sunset.jpg</span></div>
+      <div class="detail-item"><span class="detail-label" style="color:#666;">Date:</span><span class="detail-val" style="color:#ddd;" id="ssDate">08/14/2002</span></div>
+      <div class="detail-item"><span class="detail-label" style="color:#666;">Size:</span><span class="detail-val" style="color:#ddd;">1.4 MB</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TASKBAR ========== -->
+<div class="taskbar">
+  <a href="index.html" class="start-btn">
+    <img class="win-logo" src="icons/winlogo.svg" alt=""/>
+    <span>start</span>
+  </a>
+  <div class="taskbar-sep"></div>
+  <a href="index.html" class="taskbar-btn">🌐 My Homepage</a>
+  <a href="about.html" class="taskbar-btn">👤 About Me</a>
+  <a href="gallery.html" class="taskbar-btn active">📸 Photo Gallery</a>
+  <a href="music.html" class="taskbar-btn">🎵 My Music</a>
+  <a href="guestbook.html" class="taskbar-btn">📖 Guestbook</a>
+  <div class="taskbar-tray">
+    <span class="tray-icon" id="tray-volume" title="Volume — click to mute" style="cursor:pointer;">🔊</span>
+    <span class="tray-icon">🌐</span>
+    <span class="tray-icon">🛡️</span>
+    <div class="tray-clock">
+      <div id="tray-time">12:00 PM</div>
+      <div id="tray-date" style="font-size:9px; color:#cce0ff;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PHOTO DATA ───────────────────────────────────────────────────────────────
+const albums = {
+  vacation: {
+    name: 'Vacation 2002', count: 12, size: '18.4 MB', date: 'Aug 2002',
+    photos: [
+      { emoji:'🏖️', bg:'c1', name:'Beach Sunset.jpg',     date:'08/14/2002', dims:'2048×1536', size:'1.4 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🌊', bg:'c7', name:'Ocean Waves.jpg',       date:'08/15/2002', dims:'1800×1200', size:'1.1 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🐚', bg:'c6', name:'Seashells.jpg',         date:'08/15/2002', dims:'1024×768',  size:'0.6 MB', rating:'⭐⭐⭐' },
+      { emoji:'🌴', bg:'c2', name:'Palm Trees.jpg',        date:'08/16/2002', dims:'2048×1536', size:'1.3 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🌅', bg:'c3', name:'Sunrise.jpg',           date:'08/16/2002', dims:'2048×1536', size:'1.5 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🏝️', bg:'c7', name:'Island View.jpg',      date:'08/17/2002', dims:'1600×1200', size:'1.2 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🦀', bg:'c5', name:'Crab on Beach.jpg',     date:'08/17/2002', dims:'1024×768',  size:'0.5 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🍹', bg:'c6', name:'Cocktails.jpg',         date:'08/18/2002', dims:'800×600',   size:'0.4 MB', rating:'⭐⭐⭐' },
+      { emoji:'🤿', bg:'c1', name:'Snorkeling.jpg',        date:'08/18/2002', dims:'2048×1536', size:'1.6 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🐠', bg:'c7', name:'Tropical Fish.jpg',     date:'08/19/2002', dims:'1800×1200', size:'1.3 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🌻', bg:'c2', name:'Flower Market.jpg',     date:'08/20/2002', dims:'1024×768',  size:'0.7 MB', rating:'⭐⭐⭐' },
+      { emoji:'✈️', bg:'c9', name:'Flight Home.jpg',       date:'08/21/2002', dims:'1024×768',  size:'0.4 MB', rating:'⭐⭐' },
+    ]
+  },
+  family: {
+    name: 'Family', count: 28, size: '38.2 MB', date: 'Various',
+    photos: [
+      { emoji:'👨‍👩‍👧‍👦', bg:'c8', name:'Family Portrait.jpg',  date:'12/25/2001', dims:'2048×1536', size:'1.5 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🎄', bg:'c2', name:'Christmas Tree.jpg',     date:'12/24/2001', dims:'1600×1200', size:'1.1 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🎂', bg:'c5', name:'Grandmas Birthday.jpg',  date:'05/12/2002', dims:'1024×768',  size:'0.8 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🏡', bg:'c3', name:'New House.jpg',          date:'03/01/2002', dims:'2048×1536', size:'1.7 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🍗', bg:'c6', name:'Thanksgiving.jpg',       date:'11/22/2001', dims:'1024×768',  size:'0.6 MB', rating:'⭐⭐⭐' },
+      { emoji:'🎆', bg:'c4', name:'4th of July.jpg',        date:'07/04/2002', dims:'1800×1200', size:'1.4 MB', rating:'⭐⭐⭐⭐' },
+    ]
+  },
+  pets: {
+    name: 'Pets', count: 15, size: '12.8 MB', date: 'Various',
+    photos: [
+      { emoji:'🐶', bg:'c3', name:'Buddy Playing.jpg',     date:'06/10/2002', dims:'1024×768',  size:'0.7 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'🐕', bg:'c6', name:'Buddy at Park.jpg',     date:'07/22/2002', dims:'1600×1200', size:'1.0 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🐾', bg:'c9', name:'Paw Prints.jpg',        date:'01/05/2002', dims:'800×600',   size:'0.3 MB', rating:'⭐⭐⭐' },
+      { emoji:'😴', bg:'c8', name:'Nap Time.jpg',          date:'02/14/2002', dims:'1024×768',  size:'0.5 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🦴', bg:'c6', name:'Treat Time.jpg',        date:'09/03/2002', dims:'1024×768',  size:'0.6 MB', rating:'⭐⭐⭐' },
+    ]
+  },
+  school: {
+    name: 'School', count: 9, size: '7.1 MB', date: 'Sep 2001–Jun 2002',
+    photos: [
+      { emoji:'🎓', bg:'c4', name:'Graduation Day.jpg',    date:'06/15/2002', dims:'2048×1536', size:'1.6 MB', rating:'⭐⭐⭐⭐⭐' },
+      { emoji:'📚', bg:'c8', name:'Library.jpg',           date:'10/05/2001', dims:'1024×768',  size:'0.5 MB', rating:'⭐⭐⭐' },
+      { emoji:'🏫', bg:'c9', name:'School Building.jpg',   date:'09/04/2001', dims:'1600×1200', size:'1.1 MB', rating:'⭐⭐⭐⭐' },
+      { emoji:'🤝', bg:'c1', name:'Best Friends.jpg',      date:'12/20/2001', dims:'1024×768',  size:'0.8 MB', rating:'⭐⭐⭐⭐' },
+    ]
+  }
+};
+
+let currentAlbum = 'vacation';
+let currentIndex = 0;
+let ssIndex = 0;
+let ssPlaying = true;
+let ssInterval = null;
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function renderAlbum(albumKey) {
+  const album = albums[albumKey];
+  const grid = document.getElementById('photoGrid');
+  const filmstrip = document.getElementById('filmstrip');
+  grid.innerHTML = '';
+  filmstrip.innerHTML = '';
+
+  album.photos.forEach((p, i) => {
+    // Grid thumb
+    const t = document.createElement('div');
+    t.className = 'photo-thumb' + (i === currentIndex ? ' selected' : '');
+    t.innerHTML = `<div class="thumb-img ${p.bg}">${p.emoji}</div><div class="thumb-caption">${p.name}</div>`;
+    t.onclick = () => selectPhoto(i);
+    grid.appendChild(t);
+
+    // Filmstrip frame
+    const f = document.createElement('div');
+    f.className = 'film-frame' + (i === currentIndex ? ' active' : '');
+    f.style.background = getComputedStyle(document.documentElement).getPropertyValue('background') || '#333';
+    f.innerHTML = `<span style="font-size:24px">${p.emoji}</span>`;
+    f.onclick = () => selectPhoto(i);
+    filmstrip.appendChild(f);
+  });
+
+  updateViewer();
+  document.getElementById('sidebarAlbumName').textContent = album.name;
+  document.getElementById('statusText').textContent = `${album.photos.length} objects — ${album.name}`;
+}
+
+function selectPhoto(i) {
+  currentIndex = i;
+  renderAlbum(currentAlbum);
+  updateViewer();
+}
+
+function updateViewer() {
+  const album = albums[currentAlbum];
+  const p = album.photos[currentIndex];
+  const vi = document.getElementById('viewerImg');
+  vi.className = `viewer-img ${p.bg}`;
+  vi.textContent = p.emoji;
+  vi.style.fontSize = '80px';
+  document.getElementById('viewerInfo').textContent =
+    `${p.name}  |  ${currentIndex+1}/${album.photos.length}  |  ${p.dims}  |  JPEG  |  ${p.size}`;
+  document.getElementById('detailFile').textContent = p.name;
+  document.getElementById('detailSize').textContent = p.size;
+  document.getElementById('detailDims').textContent = p.dims;
+  document.getElementById('detailDate').textContent = p.date;
+  document.getElementById('detailRating').textContent = p.rating;
+}
+
+function nextPhoto() {
+  const photos = albums[currentAlbum].photos;
+  currentIndex = (currentIndex + 1) % photos.length;
+  renderAlbum(currentAlbum);
+}
+function prevPhoto() {
+  const photos = albums[currentAlbum].photos;
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  renderAlbum(currentAlbum);
+}
+
+function switchAlbum(el, key) {
+  document.querySelectorAll('.album-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentAlbum = key;
+  currentIndex = 0;
+  renderAlbum(key);
+}
+
+// ── SLIDESHOW ────────────────────────────────────────────────────────────────
+function updateSlideshowFrame() {
+  const album = albums[currentAlbum];
+  const p = album.photos[ssIndex];
+  const frame = document.getElementById('slideshowFrame');
+  frame.style.background = '';
+  frame.className = `slideshow-frame ${p.bg}`;
+  frame.textContent = p.emoji;
+  frame.style.fontSize = '120px';
+  document.getElementById('ssCounter').textContent = `${ssIndex+1} / ${album.photos.length}`;
+  document.getElementById('ssFile').textContent = p.name;
+  document.getElementById('ssDate').textContent = p.date;
+}
+
+function ssPrev() {
+  ssIndex = (ssIndex - 1 + albums[currentAlbum].photos.length) % albums[currentAlbum].photos.length;
+  updateSlideshowFrame();
+}
+function ssNext() {
+  ssIndex = (ssIndex + 1) % albums[currentAlbum].photos.length;
+  updateSlideshowFrame();
+}
+function toggleSlideshow() {
+  ssPlaying = !ssPlaying;
+  document.getElementById('ssPlayBtn').textContent = ssPlaying ? '⏸ Pause' : '▶ Play';
+  if (ssPlaying) { ssInterval = setInterval(ssNext, 3000); }
+  else           { clearInterval(ssInterval); }
+}
+
+document.getElementById('slideshow').addEventListener('click', e => {
+  if (e.target === document.getElementById('slideshow')) {
+    document.getElementById('slideshow').classList.remove('active');
+  }
+});
+
+// start slideshow auto-advance
+ssInterval = setInterval(ssNext, 3000);
+document.getElementById('slideshow').addEventListener('transitionend', updateSlideshowFrame);
+
+// ── CLOCK ───────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  document.getElementById('tray-time').textContent = h12 + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+  document.getElementById('tray-date').textContent = (now.getMonth()+1)+'/'+now.getDate()+'/'+now.getFullYear();
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderAlbum('vacation');
+updateSlideshowFrame();
+</script>
+<script src="xp-theme.js?v=3"></script>
+</body>
+</html>

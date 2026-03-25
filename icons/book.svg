@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Left page -->
+  <rect x="1" y="4" width="13" height="24" rx="1" fill="#fffde7"/>
+  <!-- Right page -->
+  <rect x="18" y="4" width="13" height="24" rx="1" fill="#fff8e1"/>
+  <!-- Spine -->
+  <rect x="12" y="3" width="8" height="26" rx="1" fill="#1560c0"/>
+  <!-- Spine highlight -->
+  <rect x="13" y="3" width="2" height="26" fill="#2a80e0" opacity="0.45"/>
+  <!-- Page borders -->
+  <rect x="1" y="4" width="13" height="24" rx="1" fill="none" stroke="#e0d8c0" stroke-width="0.5"/>
+  <rect x="18" y="4" width="13" height="24" rx="1" fill="none" stroke="#e0d8c0" stroke-width="0.5"/>
+  <!-- Left lines -->
+  <line x1="3" y1="10" x2="12" y2="10" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="3" y1="13" x2="12" y2="13" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="3" y1="16" x2="12" y2="16" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="3" y1="19" x2="12" y2="19" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="3" y1="22" x2="12" y2="22" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="3" y1="25" x2="12" y2="25" stroke="#ccc" stroke-width="0.7"/>
+  <!-- Right lines -->
+  <line x1="20" y1="10" x2="29" y2="10" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="20" y1="13" x2="29" y2="13" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="20" y1="16" x2="29" y2="16" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="20" y1="19" x2="29" y2="19" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="20" y1="22" x2="29" y2="22" stroke="#ccc" stroke-width="0.7"/>
+  <line x1="20" y1="25" x2="29" y2="25" stroke="#ccc" stroke-width="0.7"/>
+  <!-- Bookmark ribbon -->
+  <polygon points="25,4 28,4 28,12 26.5,10 25,12" fill="#e02020"/>
+</svg>

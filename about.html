@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Me — My Windows XP Website</title>
+  <link rel="stylesheet" href="xp-theme.css" />
+  <style>
+
+    /* ---- ABOUT-SPECIFIC STYLES ---- */
+
+    .profile-pic {
+      width: 96px;
+      height: 96px;
+      border: 3px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: #dce8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      flex-shrink: 0;
+    }
+
+    .profile-header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px;
+      background: linear-gradient(135deg, #dce8ff 0%, #ece9d8 100%);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      margin-bottom: 10px;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--xp-blue);
+      text-shadow: 1px 1px 0 #fff;
+      margin-bottom: 2px;
+    }
+
+    .profile-tagline {
+      font-size: 11px;
+      color: #555;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .profile-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 9px;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 2px;
+    }
+    .badge-blue   { background: #0a246a; }
+    .badge-green  { background: #3a6e28; }
+    .badge-purple { background: #5b2d8e; }
+    .badge-red    { background: #8e1a1a; }
+    .badge-teal   { background: #1a6e6e; }
+
+    /* Info sections */
+    .info-section {
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+
+    .info-section-header {
+      background: var(--xp-title-grad);
+      padding: 4px 8px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-section-body {
+      padding: 8px 10px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #222;
+    }
+
+    /* Favorite things grid */
+    .fav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px 10px;
+    }
+
+    .fav-card {
+      background: var(--xp-gray);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      padding: 6px 8px;
+    }
+
+    .fav-card-label {
+      font-size: 9px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .fav-card-value {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--xp-blue);
+    }
+
+    /* Progress bar (skills) */
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-label {
+      width: 110px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .skill-bar-track {
+      flex: 1;
+      height: 12px;
+      background: #c0bdb0;
+      border: 1px solid;
+      border-color: #848484 #fff #fff #848484;
+      position: relative;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(to bottom, #4d84f5 0%, #0a246a 100%);
+    }
+
+    .skill-pct {
+      width: 30px;
+      font-size: 10px;
+      color: #555;
+      text-align: right;
+    }
+
+    /* Quote block */
+    .quote-block {
+      background: #fffbe8;
+      border-left: 4px solid #f5c518;
+      padding: 8px 12px;
+      font-style: italic;
+      font-size: 12px;
+      color: #333;
+      margin: 6px 0;
+    }
+
+    /* Visitor counter strip */
+    .visitor-strip {
+      background: #000;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      text-align: center;
+      padding: 4px 8px;
+      letter-spacing: 3px;
+      border: 2px inset #333;
+      margin-bottom: 10px;
+    }
+
+    /* Blinkies / mini-banners */
+    .blinky-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 6px 10px;
+    }
+
+    .blinky {
+      padding: 2px 6px;
+      font-size: 9px;
+      font-weight: bold;
+      border: 1px solid #555;
+      animation: blink-color 1.4s step-start infinite;
+    }
+
+    @keyframes blink-color {
+      0%,49%  { background: #000080; color: #fff; }
+      50%,100% { background: #ff0080; color: #fff; }
+    }
+
+    .rainbow-text {
+      background: linear-gradient(90deg,#f00,#f80,#ff0,#0f0,#08f,#80f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ========== DESKTOP ICONS ========== -->
+<div class="desktop">
+  <a href="index.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/home.svg" width="32" height="32" alt=""/></div>
+    <span>Home</span>
+  </a>
+  <a href="gallery.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/camera.svg" width="32" height="32" alt=""/></div>
+    <span>Gallery</span>
+  </a>
+  <a href="guestbook.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/book.svg" width="32" height="32" alt=""/></div>
+    <span>Guestbook</span>
+  </a>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/person.svg" width="32" height="32" alt=""/></div>
+    <span>About Me</span>
+  </div>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/bin.svg" width="32" height="32" alt=""/></div>
+    <span>Recycle Bin</span>
+  </div>
+</div>
+
+<!-- ========== DESKTOP CONTENT ========== -->
+<div class="desktop-content">
+
+  <!-- MAIN ABOUT WINDOW -->
+  <div class="window" style="width:580px;">
+    <div class="window-titlebar">
+      <span class="icon">👤</span>
+      <span class="title">About Me — My Windows XP Website</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close" onclick="window.location='index.html'">✕</div>
+      </div>
+    </div>
+    <div class="window-menu">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="window-toolbar">
+      <button class="toolbar-btn" onclick="window.location='index.html'">⬅ Back</button>
+      <button class="toolbar-btn">➡ Forward</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">⬆ Up</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">📧 Email Me</button>
+    </div>
+
+    <div class="window-body">
+
+      <!-- Sidebar -->
+      <div class="window-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-heading">About Me</div>
+          <a class="sidebar-link" href="#profile"><img class="sicon" src="icons/person.svg" width="16" height="16" alt=""/> My Profile</a>
+          <a class="sidebar-link" href="#favorites"><span class="sicon">⭐</span> Favorites</a>
+          <a class="sidebar-link" href="#skills"><span class="sicon">💻</span> Skills</a>
+          <a class="sidebar-link" href="#contact"><span class="sicon">📧</span> Contact</a>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">Navigate</div>
+          <a class="sidebar-link" href="index.html"><img class="sicon" src="icons/home.svg" width="16" height="16" alt=""/> Homepage</a>
+          <a class="sidebar-link" href="gallery.html"><img class="sicon" src="icons/camera.svg" width="16" height="16" alt=""/> Photo Gallery</a>
+          <a class="sidebar-link" href="music.html"><img class="sicon" src="icons/music.svg" width="16" height="16" alt=""/> My Music</a>
+          <a class="sidebar-link" href="guestbook.html"><img class="sicon" src="icons/book.svg" width="16" height="16" alt=""/> Guestbook</a>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">My Status</div>
+          <div style="padding: 6px 10px; font-size:10px; line-height:1.8; color:#dce8ff;">
+            <div>🟢 Online</div>
+            <div>🎵 Listening to Linkin Park</div>
+            <div>😎 Feeling: AWESOME</div>
+            <div>📍 Location: My Room</div>
+          </div>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">Since</div>
+          <div style="padding:6px 10px; font-size:10px; color:#dce8ff; text-align:center; line-height:1.8;">
+            <div>Member since</div>
+            <div style="font-size:13px; font-weight:bold;">2003</div>
+            <div style="margin-top:4px;">Visitor #</div>
+            <div style="font-family:'Courier New',monospace; font-size:14px; color:#00ff00; background:#000; padding:2px 4px;">004729</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="window-content">
+
+        <!-- Visitor counter -->
+        <div class="visitor-strip">
+          YOU ARE VISITOR NUMBER: 004729
+        </div>
+
+        <!-- Profile header -->
+        <a id="profile"></a>
+        <div class="profile-header">
+          <div class="profile-pic">😎</div>
+          <div>
+            <div class="profile-name">xX_W3bMast3r_Xx</div>
+            <div class="profile-tagline">"The internet is my oyster ~*~ Est. 2003"</div>
+            <div class="profile-badges">
+              <span class="badge badge-blue">HTML Pro</span>
+              <span class="badge badge-green">Gamer</span>
+              <span class="badge badge-purple">Anime Fan</span>
+              <span class="badge badge-red">Rock Music</span>
+              <span class="badge badge-teal">Tech Nerd</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blinkies -->
+        <div class="blinky-row">
+          <span class="blinky">LINKIN PARK FAN</span>
+          <span class="blinky" style="animation-delay:.3s">I ♥ ANIME</span>
+          <span class="blinky" style="animation-delay:.6s">GAMER FOR LIFE</span>
+          <span class="blinky" style="animation-delay:.9s">PROUD NERD</span>
+        </div>
+
+        <!-- About Me text -->
+        <div class="info-section">
+          <div class="info-section-header">
+            <span>📝</span> About Me
+          </div>
+          <div class="info-section-body">
+            <p>heyyy!!!! welcome 2 my about me page!! im SO glad u clicked here omg!!! 😊</p>
+            <br/>
+            <p>my name is <strong>Gabe</strong> but my friends call me <strong>xX_W3bMast3r_Xx</strong> online lol. i'm
+            14 years old and i live in <strong>Somewhere, USA</strong>. i made this whole website myself using
+            <em>Notepad</em> (yeah that's right no dreamweaver here!!) and i am SO proud of it 🎉</p>
+            <br/>
+            <p>i spend most of my time on the computer, listening to music, and playing video games. my friends
+            say i'm obsessed with the internet but i say thats their loss bc the internet is AMAZING!!!!!</p>
+            <br/>
+            <div class="quote-block">
+              "In the end, it doesn't even matter." — Linkin Park, my favorite band EVER
+            </div>
+            <br/>
+            <p>if you wanna talk add me on AIM: <strong>xXW3bMast3rXx</strong> 💬
+            or sign my <a href="guestbook.html">guestbook</a>!! plz sign it i check it every day hehe</p>
+          </div>
+        </div>
+
+        <!-- Favorites -->
+        <a id="favorites"></a>
+        <div class="info-section">
+          <div class="info-section-header">
+            <span>⭐</span> My Favorites
+          </div>
+          <div class="fav-grid">
+            <div class="fav-card">
+              <div class="fav-card-label">🎵 Music</div>
+              <div class="fav-card-value">Linkin Park</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">🎮 Game</div>
+              <div class="fav-card-value">Halo 2</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">🎬 Movie</div>
+              <div class="fav-card-value">The Matrix</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">📺 Show</div>
+              <div class="fav-card-value">Fullmetal Alchemist</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">🍕 Food</div>
+              <div class="fav-card-value">Pizza (obv)</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">🌐 Website</div>
+              <div class="fav-card-value">Newgrounds.com</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">📚 Book</div>
+              <div class="fav-card-value">Harry Potter</div>
+            </div>
+            <div class="fav-card">
+              <div class="fav-card-label">💻 OS</div>
+              <div class="fav-card-value">Windows XP 💙</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <a id="skills"></a>
+        <div class="info-section">
+          <div class="info-section-header">
+            <span>💻</span> My Skillz
+          </div>
+          <div class="info-section-body">
+            <div class="skill-row">
+              <span class="skill-label">HTML</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+              <span class="skill-pct">90%</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">CSS</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+              <span class="skill-pct">75%</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">MS Paint</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+              <span class="skill-pct">95%</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">Counter-Strike</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
+              <span class="skill-pct">80%</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">Typing Speed</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%"></div></div>
+              <span class="skill-pct">70%</span>
+            </div>
+            <div class="skill-row">
+              <span class="skill-label">Being Awesome</span>
+              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:100%; background:linear-gradient(to right,#f00,#f80,#ff0,#0f0,#08f,#80f)"></div></div>
+              <span class="skill-pct">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <a id="contact"></a>
+        <div class="info-section">
+          <div class="info-section-header">
+            <span>📧</span> Contact Me
+          </div>
+          <div class="info-section-body">
+            <table style="width:100%; border-collapse:collapse; font-size:11px;">
+              <tr>
+                <td style="padding:3px 0; width:110px; color:#555;">💬 AIM:</td>
+                <td style="font-weight:bold;">xXW3bMast3rXx</td>
+              </tr>
+              <tr>
+                <td style="padding:3px 0; color:#555;">📧 Email:</td>
+                <td style="font-weight:bold;">coolkid2003@hotmail.com</td>
+              </tr>
+              <tr>
+                <td style="padding:3px 0; color:#555;">🌐 MSN:</td>
+                <td style="font-weight:bold;">coolkid2003@hotmail.com</td>
+              </tr>
+              <tr>
+                <td style="padding:3px 0; color:#555;">📖 Guestbook:</td>
+                <td><a href="guestbook.html">Sign it plz!! :)</a></td>
+              </tr>
+            </table>
+            <p style="margin-top:8px; color:#555; font-size:10px;">
+              ⚠️ no weirdos pls!! if i dont know u dont add me on AIM thx
+            </p>
+          </div>
+        </div>
+
+        <!-- Fun facts marquee -->
+        <div style="overflow:hidden; border:2px inset #848484; background:#000080; color:#ffff00; padding:3px 0; margin-bottom:10px;">
+          <marquee scrollamount="3">
+            🌟 Fun Facts: I have 3 cats 🐱🐱🐱 &nbsp;|&nbsp;
+            I once stayed up until 3am making this website &nbsp;|&nbsp;
+            My desktop wallpaper is Bliss (the XP default) &nbsp;|&nbsp;
+            I know all the words to every Linkin Park song &nbsp;|&nbsp;
+            I have beaten Halo on Legendary &nbsp;|&nbsp;
+            UNDER CONSTRUCTION — more pages coming soon!! 🚧
+          </marquee>
+        </div>
+
+        <!-- Sign my guestbook CTA -->
+        <div style="text-align:center; padding:10px; background:var(--xp-gray); border:2px solid; border-color:#fff #848484 #848484 #fff;">
+          <h2 class="rainbow-text" style="font-size:14px; margin-bottom:4px;">✨ Sign My Guestbook! ✨</h2>
+          <p style="font-size:11px; color:#555; margin-bottom:8px;">Let me know you were here!!</p>
+          <button class="toolbar-btn" style="font-size:12px; padding:4px 16px;" onclick="window.location='guestbook.html'">
+            📖 Go to Guestbook
+          </button>
+        </div>
+
+      </div><!-- /window-content -->
+    </div><!-- /window-body -->
+  </div><!-- /window -->
+
+</div><!-- /desktop-content -->
+
+<!-- ========== TASKBAR ========== -->
+<div class="taskbar">
+  <a href="index.html" class="start-btn">
+    <img class="win-logo" src="icons/winlogo.svg" alt=""/>
+    <span>start</span>
+  </a>
+  <div class="taskbar-sep"></div>
+  <a href="index.html" class="taskbar-btn">🌐 My Homepage</a>
+  <a href="about.html" class="taskbar-btn active">👤 About Me</a>
+  <a href="gallery.html" class="taskbar-btn">📸 Photo Gallery</a>
+  <a href="music.html" class="taskbar-btn">🎵 My Music</a>
+  <a href="guestbook.html" class="taskbar-btn">📖 Guestbook</a>
+  <div class="taskbar-tray">
+    <span class="tray-icon" id="tray-volume" title="Volume — click to mute" style="cursor:pointer;">🔊</span>
+    <span class="tray-icon">🌐</span>
+    <span class="tray-icon">🛡️</span>
+    <div class="tray-clock">
+      <div id="tray-time">12:00 PM</div>
+      <div id="tray-date">3/25/2003</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    let h = now.getHours(), m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+    const dateStr = (now.getMonth()+1) + '/' + now.getDate() + '/' + now.getFullYear();
+    document.getElementById('tray-time').textContent = timeStr;
+    document.getElementById('tray-date').textContent = dateStr;
+  }
+  updateClock();
+  setInterval(updateClock, 10000);
+</script>
+<script src="xp-theme.js?v=3"></script>
+
+</body>
+</html>

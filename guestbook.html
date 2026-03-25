@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guestbook — My Windows XP Website</title>
+  <link rel="stylesheet" href="xp-theme.css" />
+  <style>
+    /* ---- GUESTBOOK-SPECIFIC STYLES ---- */
+
+    .gb-entry {
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: #fff;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .gb-entry-header {
+      background: var(--xp-title-grad);
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .gb-entry-avatar {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .gb-entry-meta { flex: 1; }
+    .gb-entry-name { font-weight: bold; font-size: 12px; text-shadow: 0 1px 1px rgba(0,0,80,0.6); }
+    .gb-entry-info { font-size: 10px; color: #cce0ff; }
+
+    .gb-entry-body {
+      padding: 8px;
+      line-height: 1.6;
+      border-top: 1px solid #e0ddd0;
+    }
+
+    .gb-entry-footer {
+      background: var(--xp-gray);
+      border-top: 1px solid #848484;
+      padding: 3px 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 10px;
+      color: #555;
+    }
+
+    .gb-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      background: #000080;
+      color: #fff;
+      font-size: 9px;
+      font-weight: bold;
+      border: 1px outset #8888cc;
+    }
+
+    .gb-mood {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid #848484;
+      background: #fffbe6;
+      font-size: 10px;
+    }
+
+    /* Sign form */
+    .sign-form {
+      background: var(--xp-gray);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      padding: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .page-btn {
+      padding: 2px 8px;
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      background: var(--xp-btn);
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      cursor: pointer;
+    }
+    .page-btn.active {
+      background: var(--xp-blue);
+      color: #fff;
+      border-color: #0a246a;
+    }
+    .page-btn:hover:not(.active) { background: #d4d0c8; }
+
+    /* Stat boxes */
+    .stat-box {
+      background: #fff;
+      border: 2px inset;
+      border-color: #848484 #fff #fff #848484;
+      padding: 8px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--xp-blue);
+    }
+    .stat-label { font-size: 10px; color: #555; }
+
+    /* Success message */
+    .success-msg {
+      display: none;
+      background: #e0ffe0;
+      border: 2px solid #008000;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #006400;
+      margin-bottom: 8px;
+      align-items: center;
+      gap: 8px;
+    }
+    .success-msg.show { display: flex; }
+
+    /* Mood selector */
+    .mood-picker {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .mood-opt {
+      padding: 2px 8px;
+      border: 2px solid;
+      border-color: #fff #848484 #848484 #fff;
+      background: var(--xp-gray);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .mood-opt:hover { background: #dce8ff; }
+    .mood-opt.selected {
+      border-color: #848484 #fff #fff #848484;
+      background: #dce8ff;
+      outline: 1px solid var(--xp-blue);
+    }
+
+    /* Character counter */
+    .char-counter { text-align: right; font-size: 10px; color: #555; }
+    .char-counter.warn { color: #c00; }
+  </style>
+</head>
+<body>
+
+<!-- ========== DESKTOP ICONS ========== -->
+<div class="desktop">
+  <a href="index.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/home.svg" width="32" height="32" alt=""/></div>
+    <span>Home</span>
+  </a>
+  <a href="gallery.html" class="desktop-icon" style="text-decoration:none;">
+    <div class="icon-img"><img src="icons/camera.svg" width="32" height="32" alt=""/></div>
+    <span>Gallery</span>
+  </a>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/book.svg" width="32" height="32" alt=""/></div>
+    <span>Guestbook</span>
+  </div>
+  <div class="desktop-icon">
+    <div class="icon-img"><img src="icons/bin.svg" width="32" height="32" alt=""/></div>
+    <span>Recycle Bin</span>
+  </div>
+</div>
+
+<!-- ========== DESKTOP CONTENT ========== -->
+<div class="desktop-content">
+
+  <!-- MAIN GUESTBOOK WINDOW -->
+  <div class="window" style="width:580px;">
+    <div class="window-titlebar">
+      <span class="icon">📖</span>
+      <span class="title">Guestbook — My Windows XP Website</span>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close" onclick="window.location='index.html'">✕</div>
+      </div>
+    </div>
+    <div class="window-menu">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="window-toolbar">
+      <button class="toolbar-btn">🔄 Refresh</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" onclick="scrollToForm()">✏️ Sign Guestbook</button>
+      <button class="toolbar-btn">🖨️ Print</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">⬅ Prev Page</button>
+      <button class="toolbar-btn">➡ Next Page</button>
+    </div>
+
+    <div class="window-body">
+      <!-- Sidebar -->
+      <div class="window-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-heading">Guestbook</div>
+          <a class="sidebar-link" href="#" onclick="scrollToForm()"><span class="sicon">✏️</span> Sign my book!</a>
+          <a class="sidebar-link" href="#"><span class="sicon">🔍</span> Search entries</a>
+          <a class="sidebar-link" href="#"><span class="sicon">📅</span> By date</a>
+          <a class="sidebar-link" href="#"><span class="sicon">🌍</span> By country</a>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">Stats</div>
+          <div style="padding: 6px; display:flex; flex-direction:column; gap:6px;">
+            <div class="stat-box">
+              <div class="stat-num" id="totalEntries">47</div>
+              <div class="stat-label">Total Entries</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">12</div>
+              <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">18</div>
+              <div class="stat-label">Countries</div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">Navigate</div>
+          <a class="sidebar-link" href="index.html"><img class="sicon" src="icons/home.svg" width="16" height="16" alt=""/> Homepage</a>
+          <a class="sidebar-link" href="about.html"><img class="sicon" src="icons/person.svg" width="16" height="16" alt=""/> About Me</a>
+          <a class="sidebar-link" href="gallery.html"><img class="sicon" src="icons/camera.svg" width="16" height="16" alt=""/> Gallery</a>
+          <a class="sidebar-link" href="music.html"><img class="sicon" src="icons/music.svg" width="16" height="16" alt=""/> My Music</a>
+        </div>
+        <div class="sidebar-section" style="margin-top:4px;">
+          <div class="sidebar-heading">Recent</div>
+          <div style="padding: 4px 10px; font-size: 10px; color:#dce8ff; line-height:1.8;">
+            <div>xXCoolDude99Xx</div>
+            <div>StarGazer2002</div>
+            <div>PokemonMaster</div>
+            <div>LinkinParkFan</div>
+            <div>TechWizard42</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="window-content" id="gbContent">
+
+        <!-- Header banner -->
+        <div style="text-align:center; padding: 8px 0; border-bottom: 2px solid #e0ddd0; margin-bottom:10px;">
+          <h1 class="rainbow-text" style="font-size:18px;">📖 My Guestbook 📖</h1>
+          <p style="color:#555;">Thanks for visiting! Please sign and leave a message!</p>
+          <div style="margin-top:4px; font-size:10px; color:#888;">
+            Showing entries 1–10 of <span id="gbTotal">47</span> &nbsp;|&nbsp;
+            <a href="#" onclick="scrollToForm()">Sign the guestbook!</a>
+          </div>
+        </div>
+
+        <!-- Entries list -->
+        <div id="entriesList"></div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="page-btn">⬅ Prev</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">4</button>
+          <button class="page-btn">5</button>
+          <button class="page-btn">Next ➡</button>
+        </div>
+
+        <hr style="margin: 16px 0;" />
+
+        <!-- SIGN FORM -->
+        <div id="signForm">
+          <h2 style="margin-bottom:8px;">✏️ Sign My Guestbook</h2>
+
+          <div class="success-msg" id="successMsg">
+            <span style="font-size:20px;">✅</span>
+            <div>
+              <strong>Thank you for signing!</strong><br />
+              Your entry has been added to the guestbook.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label">Name: <span style="color:#c00;">*</span></label>
+              <input class="xp-input" type="text" id="gbName" placeholder="Your name or screen name" maxlength="40" />
+            </div>
+            <div class="form-group">
+              <label class="label">Email:</label>
+              <input class="xp-input" type="email" id="gbEmail" placeholder="yourname@aol.com (optional)" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label">Homepage URL:</label>
+              <input class="xp-input" type="text" id="gbUrl" placeholder="http://www.geocities.com/..." />
+            </div>
+            <div class="form-group">
+              <label class="label">Location:</label>
+              <input class="xp-input" type="text" id="gbLocation" placeholder="City, Country" maxlength="40" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label">Avatar:</label>
+              <select class="xp-select" id="gbAvatar">
+                <option value="😎">😎 Cool Dude</option>
+                <option value="👾">👾 Gamer</option>
+                <option value="🎸">🎸 Rocker</option>
+                <option value="🌸">🌸 Flower</option>
+                <option value="🤖">🤖 Robot</option>
+                <option value="🦄">🦄 Unicorn</option>
+                <option value="🐱">🐱 Cat</option>
+                <option value="🔥">🔥 Fire</option>
+                <option value="⭐">⭐ Star</option>
+                <option value="🎮">🎮 Gamer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="label">Rating: <span style="color:#555;">(how was the site?)</span></label>
+              <select class="xp-select" id="gbRating">
+                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ Totally Awesome!!</option>
+                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ Really Cool!</option>
+                <option value="⭐⭐⭐">⭐⭐⭐ Pretty Good</option>
+                <option value="⭐⭐">⭐⭐ Needs Work</option>
+                <option value="⭐">⭐ Meh</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mb8">
+            <label class="label">Current Mood:</label>
+            <div class="mood-picker" id="moodPicker">
+              <div class="mood-opt selected" data-mood="😄 Happy" onclick="selectMood(this)">😄</div>
+              <div class="mood-opt" data-mood="😎 Cool" onclick="selectMood(this)">😎</div>
+              <div class="mood-opt" data-mood="😂 LOL" onclick="selectMood(this)">😂</div>
+              <div class="mood-opt" data-mood="🤔 Thinking" onclick="selectMood(this)">🤔</div>
+              <div class="mood-opt" data-mood="😴 Sleepy" onclick="selectMood(this)">😴</div>
+              <div class="mood-opt" data-mood="🎮 Gaming" onclick="selectMood(this)">🎮</div>
+              <div class="mood-opt" data-mood="🎵 Music" onclick="selectMood(this)">🎵</div>
+              <div class="mood-opt" data-mood="😍 Loving it" onclick="selectMood(this)">😍</div>
+              <div class="mood-opt" data-mood="🔥 Hyped" onclick="selectMood(this)">🔥</div>
+              <div class="mood-opt" data-mood="💻 Coding" onclick="selectMood(this)">💻</div>
+            </div>
+          </div>
+
+          <div class="form-group mb8">
+            <label class="label">Message: <span style="color:#c00;">*</span></label>
+            <textarea class="xp-input w100" id="gbMessage" rows="5"
+              placeholder="Leave a message! Tell me how you found my site, what you think, where you're from..."
+              maxlength="500" oninput="updateCharCount(this)"></textarea>
+            <div class="char-counter" id="charCount">0 / 500</div>
+          </div>
+
+          <div class="form-group mb8">
+            <label class="label">Favorite band / song: <span style="color:#888;">(optional — totally rad section!)</span></label>
+            <input class="xp-input" type="text" id="gbBand" placeholder="e.g. Linkin Park — In The End" maxlength="60" />
+          </div>
+
+          <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:8px;">
+            <span style="font-size:10px; color:#888;">* Required fields</span>
+            <button class="xp-btn" onclick="clearForm()">Clear</button>
+            <button class="xp-btn primary" onclick="submitEntry()">📤 Sign Guestbook!</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="window-statusbar">
+      <div class="statusbar-panel" id="gbStatus">47 entries — Page 1 of 5</div>
+      <div class="statusbar-panel" style="flex:0 0 100px;">Internet</div>
+    </div>
+  </div>
+
+  <!-- ONLINE USERS WINDOW -->
+  <div class="window" style="width:200px; align-self:flex-start;">
+    <div class="window-titlebar">
+      <span class="icon">👥</span>
+      <span class="title">Who's Online</span>
+      <div class="win-btns">
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+    <div class="window-content" style="padding:6px;">
+      <div style="font-size:10px; color:#555; margin-bottom:6px;">🟢 3 users online now</div>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:center; gap:6px; padding:3px; background:#f0fff0; border:1px solid #90ee90;">
+          <span style="font-size:16px;">😎</span>
+          <div>
+            <div style="font-size:11px; font-weight:bold;">xXCoolDude99Xx</div>
+            <div style="font-size:9px; color:#555;">USA 🇺🇸</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; padding:3px; background:#f0fff0; border:1px solid #90ee90;">
+          <span style="font-size:16px;">🌸</span>
+          <div>
+            <div style="font-size:11px; font-weight:bold;">SakuraDreams</div>
+            <div style="font-size:9px; color:#555;">Japan 🇯🇵</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; padding:3px; background:#f0fff0; border:1px solid #90ee90;">
+          <span style="font-size:16px;">🎮</span>
+          <div>
+            <div style="font-size:11px; font-weight:bold;">GamerKid2003</div>
+            <div style="font-size:9px; color:#555;">UK 🇬🇧</div>
+          </div>
+        </div>
+      </div>
+      <hr style="margin:6px 0;" />
+      <div style="font-size:10px; color:#555;">Last signed:</div>
+      <div style="font-size:11px; font-weight:bold; margin-top:2px;">xXCoolDude99Xx</div>
+      <div style="font-size:9px; color:#888;">2 minutes ago</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== TASKBAR ========== -->
+<div class="taskbar">
+  <a href="index.html" class="start-btn">
+    <img class="win-logo" src="icons/winlogo.svg" alt=""/>
+    <span>start</span>
+  </a>
+  <div class="taskbar-sep"></div>
+  <a href="index.html" class="taskbar-btn">🌐 My Homepage</a>
+  <a href="about.html" class="taskbar-btn">👤 About Me</a>
+  <a href="gallery.html" class="taskbar-btn">📸 Photo Gallery</a>
+  <a href="music.html" class="taskbar-btn">🎵 My Music</a>
+  <a href="guestbook.html" class="taskbar-btn active">📖 Guestbook</a>
+  <div class="taskbar-tray">
+    <span class="tray-icon" id="tray-volume" title="Volume — click to mute" style="cursor:pointer;">🔊</span>
+    <span class="tray-icon">🌐</span>
+    <span class="tray-icon">🛡️</span>
+    <div class="tray-clock">
+      <div id="tray-time">12:00 PM</div>
+      <div id="tray-date" style="font-size:9px; color:#cce0ff;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SEED ENTRIES ─────────────────────────────────────────────────────────────
+const seedEntries = [
+  { name:'xXCoolDude99Xx',  avatar:'😎', location:'California, USA 🇺🇸', date:'03/25/2003 11:42 AM', mood:'🔥 Hyped',    rating:'⭐⭐⭐⭐⭐', band:'Linkin Park — Numb',           badge:'Regular', message:"DUDE your site is SO COOL!! I found it through a banner on Newgrounds lol. Love the Windows XP theme, it's totally rad! Bookmarked for sure!! Sign mine back?? xoxo" },
+  { name:'StarGazer2002',   avatar:'⭐', location:'Texas, USA 🇺🇸',       date:'03/24/2003 9:15 PM',  mood:'😍 Loving it', rating:'⭐⭐⭐⭐⭐', band:'Evanescence — Bring Me To Life', badge:'',        message:"Hey!! Found your site through a webring :) It's so awesome! I love the photo gallery, the vacation pics are beautiful. Please add me to your links page!! My site is at geocities.com/starz2002" },
+  { name:'PokemonMaster',   avatar:'🎮', location:'Toronto, Canada 🇨🇦',  date:'03/23/2003 3:00 PM',  mood:'🎮 Gaming',   rating:'⭐⭐⭐⭐',  band:'Good Charlotte — The Anthem',   badge:'',        message:"hey wats up!! pokemonmaster here from canada eh lol. your site is pretty cool but you should add a pokemon section haha jk. the music player is awesome btw!!! \n\n~PokemonMaster~\n*~*~*~*~*~*~*" },
+  { name:'LinkinParkFan',   avatar:'🎸', location:'London, UK 🇬🇧',       date:'03/22/2003 7:55 PM',  mood:'😎 Cool',     rating:'⭐⭐⭐⭐⭐', band:'Linkin Park — In The End',      badge:'VIP',     message:"OMG fellow LP fan!! In The End is literally the best song ever made no cap. Your website is amazing, I love the design. When are you updating the photo gallery? Keep it up!!! \n\nLuv & Rockets 🚀" },
+  { name:'TechWizard42',    avatar:'🤖', location:'Berlin, Germany 🇩🇪',  date:'03/21/2003 2:30 PM',  mood:'💻 Coding',   rating:'⭐⭐⭐',   band:'Rammstein — Du Hast',           badge:'',        message:"Sehr gut website! Your Windows XP CSS is very impressive for 2003. How did you make the title bars? I am trying to make something similar for my site. Also, the hit counter is cool :D" },
+  { name:'SakuraDreams',    avatar:'🌸', location:'Tokyo, Japan 🇯🇵',     date:'03/20/2003 11:00 AM', mood:'😄 Happy',    rating:'⭐⭐⭐⭐⭐', band:'Hikaru Utada — First Love',     badge:'',        message:"Hello from Japan!! 🌸 Your website is kawaii desu!! I love the photo gallery so much, the beach photos remind me of Okinawa. Please visit my website someday! がんばって!! (Ganbatte!!)" },
+  { name:'Grunge4Life',     avatar:'🔥', location:'Seattle, USA 🇺🇸',     date:'03/19/2003 8:45 PM',  mood:'🎵 Music',    rating:'⭐⭐⭐⭐',  band:'Nirvana — Smells Like Teen Spirit', badge:'',    message:"Sup. Cool site I guess. Found it randomly. The music player is a nice touch even tho it only plays one song lol. Also the marquee text is SO 1999 but whatever its nostalgic. Peace out ✌️" },
+  { name:'WebDesignQueen',  avatar:'👾', location:'New York, USA 🇺🇸',    date:'03/18/2003 4:20 PM',  mood:'🤔 Thinking', rating:'⭐⭐⭐⭐',  band:'No Doubt — Just A Girl',        badge:'Regular', message:"Love the design! Very creative use of CSS. One suggestion: you should add a favicon! Also maybe a tagboard would be cool. Your vacation photos are GORGEOUS where did you go?? I'm jealous!! :P" },
+  { name:'AOLkid2003',      avatar:'😄', location:'Ohio, USA 🇺🇸',        date:'03/17/2003 9:00 PM',  mood:'😂 LOL',      rating:'⭐⭐⭐⭐⭐', band:'50 Cent — In Da Club',          badge:'',        message:"LMAO this site is hilarious in the best way!! The Windows XP theme is genius. Are those real photos?? The beach ones are amazing. Signed your guestbook!! :):):) AIM me @ AOLkid2003 if u wanna chat haha" },
+  { name:'CuteGirl88',      avatar:'🦄', location:'Paris, France 🇫🇷',    date:'03/16/2003 6:30 PM',  mood:'😄 Happy',    rating:'⭐⭐⭐⭐⭐', band:'Avril Lavigne — Complicated',   badge:'',        message:"Bonjour from France!! 🗼 Your website is magnifique! I love everything about it. The guestbook is such a great idea. I will come back every day to check for updates. Bisous! 💋💋💋" },
+];
+
+let allEntries = [...seedEntries];
+let selectedMood = '😄 Happy';
+
+// ── RENDER ENTRIES ───────────────────────────────────────────────────────────
+function renderEntries() {
+  const list = document.getElementById('entriesList');
+  list.innerHTML = '';
+  allEntries.forEach((e, i) => {
+    const isNew = i === 0 && allEntries.length > seedEntries.length;
+    const div = document.createElement('div');
+    div.className = 'gb-entry';
+    div.innerHTML = `
+      <div class="gb-entry-header">
+        <div class="gb-entry-avatar">${e.avatar}</div>
+        <div class="gb-entry-meta">
+          <div class="gb-entry-name">
+            ${e.name}
+            ${e.badge ? `<span class="gb-badge">${e.badge}</span>` : ''}
+            ${isNew ? '<span class="gb-badge" style="background:#c00;">NEW!</span>' : ''}
+          </div>
+          <div class="gb-entry-info">${e.location} &nbsp;|&nbsp; ${e.date}</div>
+        </div>
+        <div style="text-align:right; font-size:10px; color:#cce0ff;">
+          <div>${e.rating}</div>
+          <div class="gb-mood">${e.mood}</div>
+        </div>
+      </div>
+      <div class="gb-entry-body">
+        ${e.message.replace(/\n/g, '<br>')}
+        ${e.band ? `<div style="margin-top:6px; font-size:10px; color:#555;">🎵 Now listening: <em>${e.band}</em></div>` : ''}
+      </div>
+      <div class="gb-entry-footer">
+        <a href="#" style="font-size:10px;">🔗 Visit homepage</a>
+        <span>•</span>
+        <a href="#" style="font-size:10px;">📧 Email</a>
+        <span style="margin-left:auto; font-size:10px; color:#888;">Entry #${allEntries.length - i}</span>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+
+  const total = allEntries.length;
+  document.getElementById('totalEntries').textContent = total;
+  document.getElementById('gbTotal').textContent = total;
+  document.getElementById('gbStatus').textContent = `${total} entries — Page 1 of ${Math.ceil(total/10)}`;
+}
+
+// ── FORM ─────────────────────────────────────────────────────────────────────
+function selectMood(el) {
+  document.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedMood = el.dataset.mood;
+}
+
+function updateCharCount(el) {
+  const count = el.value.length;
+  const counter = document.getElementById('charCount');
+  counter.textContent = count + ' / 500';
+  counter.className = 'char-counter' + (count > 450 ? ' warn' : '');
+}
+
+function clearForm() {
+  ['gbName','gbEmail','gbUrl','gbLocation','gbBand','gbMessage'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('charCount').textContent = '0 / 500';
+  document.getElementById('gbAvatar').selectedIndex = 0;
+  document.getElementById('gbRating').selectedIndex = 0;
+  document.querySelectorAll('.mood-opt').forEach((o,i) => o.classList.toggle('selected', i===0));
+  selectedMood = '😄 Happy';
+}
+
+function submitEntry() {
+  const name = document.getElementById('gbName').value.trim();
+  const message = document.getElementById('gbMessage').value.trim();
+  if (!name) { alert('Please enter your name!'); return; }
+  if (!message) { alert('Please enter a message!'); return; }
+
+  const now = new Date();
+  const dateStr = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}/${now.getFullYear()} ` +
+    `${String(now.getHours()%12||12).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} ${now.getHours()>=12?'PM':'AM'}`;
+
+  const loc = document.getElementById('gbLocation').value.trim() || 'Unknown Location';
+  const avatar = document.getElementById('gbAvatar').value;
+  const rating = document.getElementById('gbRating').value;
+  const band = document.getElementById('gbBand').value.trim();
+
+  allEntries.unshift({ name, avatar, location: loc, date: dateStr, mood: selectedMood, rating, band, badge: '', message });
+
+  renderEntries();
+  clearForm();
+
+  const msg = document.getElementById('successMsg');
+  msg.classList.add('show');
+  document.getElementById('gbContent').scrollTop = 0;
+  setTimeout(() => msg.classList.remove('show'), 5000);
+}
+
+function scrollToForm() {
+  document.getElementById('signForm').scrollIntoView({ behavior:'smooth' });
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  document.getElementById('tray-time').textContent = h12 + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+  document.getElementById('tray-date').textContent = (now.getMonth()+1)+'/'+now.getDate()+'/'+now.getFullYear();
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderEntries();
+</script>
+<script src="xp-theme.js?v=3"></script>
+</body>
+</html>
